@@ -1,0 +1,25 @@
+package com.example.collegedirectory.entities;
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "facultyprofile")
+public class FacultyProfile {
+    @Id
+    private Long userId;
+
+    @OneToOne
+    @MapsId
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    private String photo;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    private Department department;
+
+    private String officeHours;
+
+    // Getters and Setters
+}

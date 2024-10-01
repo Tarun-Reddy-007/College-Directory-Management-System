@@ -1,0 +1,20 @@
+package com.example.collegedirectory.services;
+
+import com.example.collegedirectory.entities.StudentProfile;
+import com.example.collegedirectory.repositories.StudentProfileRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class StudentProfileService {
+
+    @Autowired
+    private StudentProfileRepository studentProfileRepository;
+    
+    @Autowired
+    private DepartmentRepository departmentRepository;
+    
+    public StudentProfile findById(Long id) {
+        return studentProfileRepository.findById(id).orElse(null); // Return null if not found
+    }
+}

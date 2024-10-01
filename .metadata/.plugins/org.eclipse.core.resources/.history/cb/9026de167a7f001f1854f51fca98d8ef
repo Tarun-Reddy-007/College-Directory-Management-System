@@ -1,0 +1,34 @@
+package com.example.collegedirectory.services;
+
+import com.example.collegedirectory.entities.FacultyAdvisors;
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.FacultyAdvisorsRepository;
+import com.example.collegedirectory.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FacultyAdvisorsService {
+
+    @Autowired
+    private FacultyAdvisorsRepository facultyAdvisorsRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private FacultyAdvisorsRepository facultyAdvisorsRepository;
+
+    public FacultyAdvisors addFacultyAdvisor(Long studentId, Long facultyId) {
+        // Retrieve student and faculty using userRepository
+        User student = userRepository.findById(studentId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid student ID"));
+        User faculty = userRepository.findById(facultyId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid faculty ID"));
+
+        // Create the new FacultyAdvisors record
+        FacultyAdvisors facultyAdvisors = new FacultyAdvisors(student, faculty);
+
+        // Save the relationship to the database
+        return facultyAdvisorsRepository.save(facultyAdvisors);
+    }
+}

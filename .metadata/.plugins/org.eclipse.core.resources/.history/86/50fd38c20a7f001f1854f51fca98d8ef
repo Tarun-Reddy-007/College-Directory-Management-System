@@ -1,0 +1,31 @@
+package com.example.collegedirectory.controllers;
+
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.collegedirectory.services.StudentProfileService;
+
+@RestController
+@RequestMapping("/api/student")
+public class StudentProfileController {
+
+    @Autowired
+    private StudentProfileService studentProfileService;
+
+    @GetMapping("/academics")
+    public ResponseEntity<Map<String, Object>> getStudentAcademics(@RequestParam Long userId) {
+        try {
+            // Fetch academic details using the service
+            Map<String, Object> academicDetails = studentProfileService.getStudentAcademicDetails(userId);
+            return ResponseEntity.ok(academicDetails);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+}

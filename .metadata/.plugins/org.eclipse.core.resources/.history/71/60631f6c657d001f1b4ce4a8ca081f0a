@@ -1,0 +1,44 @@
+package com.example.collegedirectory.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.UserRepository;
+
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+
+    public boolean authenticate(String username, String password, String role) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            System.out.println("Found user: " + user);
+            System.out.println("User role: " + user.getRole() + ", provided role: " + role);
+
+            boolean passwordMatches = user.getPassword().equals(password);
+            System.out.println("Password matches: " + passwordMatches);
+
+            if (passwordMatches) {
+                System.out.println("Password matched for user: " + username);
+            } else {
+                System.out.println("Password did not match for user: " + username);
+            }
+
+            if (user.getRole().equals(role)) {
+                System.out.println("Role matched for user: " + username);
+            } else {
+                System.out.println("Role did not match for user: " + username);
+            }
+
+            if (passwordMatches && user.getRole().equals(role)) {
+                return true;
+            }
+        } else {
+            System.out.println("No user found with username: " + username);
+        }
+        System.out.println("Authentication failed for user: " + username);
+        return false;
+    }
+
+}

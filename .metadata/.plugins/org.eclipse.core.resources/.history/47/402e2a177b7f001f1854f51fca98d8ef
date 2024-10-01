@@ -1,0 +1,52 @@
+package com.example.collegedirectory.entities;
+
+import jakarta.persistence.Embeddable;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+@Embeddable
+public class FacultyAdvisorsId implements Serializable {
+
+    private Long studentId;
+    private Long facultyId;
+
+    // Default constructor
+    public FacultyAdvisorsId() {}
+
+    public FacultyAdvisorsId(Long studentId, Long facultyId) {
+        this.studentId = studentId;
+        this.facultyId = facultyId;
+    }
+
+    // Getters and Setters
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
+    }
+
+    public Long getFacultyId() {
+        return facultyId;
+    }
+
+    public void setFacultyId(Long facultyId) {
+        this.facultyId = facultyId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FacultyAdvisorsId)) return false;
+        FacultyAdvisorsId that = (FacultyAdvisorsId) o;
+        return Objects.equals(studentId, that.studentId) && 
+               Objects.equals(facultyId, that.facultyId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(studentId, facultyId);
+    }
+}

@@ -1,0 +1,36 @@
+.manage-department-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    width: 100%;
+}
+
+.manage-department-header {
+    margin-bottom: 20px;
+    margin-left: 40%;
+}
+
+.manage-department-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.dropdown {
+    width: 150px; /* Adjust the width as necessary */
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.table-container {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.table {
+    width: 100%;
+}

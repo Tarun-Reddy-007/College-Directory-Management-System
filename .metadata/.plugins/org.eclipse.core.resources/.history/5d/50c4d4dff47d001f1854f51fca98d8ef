@@ -1,0 +1,43 @@
+package com.example.collegedirectory.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import com.example.collegedirectory.entities.Course;
+import com.example.collegedirectory.entities.Department;
+import com.example.collegedirectory.services.CourseService;
+import com.example.collegedirectory.services.DepartmentService;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/courses")
+public class CourseController {
+    @Autowired
+    private CourseService courseService;
+    @Autowired
+    private DepartmentService departmentService;
+
+    @GetMapping("/getall")
+    public ResponseEntity<List<Course>> getAllCourses() {
+        List<Course> courses = courseService.getAllCourses();
+        return ResponseEntity.ok(courses);
+    }
+
+    @PostMapping("/addcourse")
+    public ResponseEntity<Course> addCourse(@RequestBody Course course) {
+        // Fetch the department by name
+        Department department = departmentService.getDepartmentByName(course.getDepartmentName()); // Fetching by department name
+
+        if (department == null) {
+            return ResponseEntity.badRequest().body(null); // Handle error appropriately if department not found
+        }
+
+        // Set the fetched department to the course
+        course.setDepartment(department);
+
+        // Create and save the course
+        Course addedCourse = courseService.addCourse(course);
+        return ResponseEntity.ok(addedCourse);
+    }
+}

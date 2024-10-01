@@ -1,0 +1,186 @@
+package com.example.collegedirectory.services;
+
+import com.example.collegedirectory.entities.Department;
+import com.example.collegedirectory.entities.FacultyProfile;
+import com.example.collegedirectory.entities.Role;
+import com.example.collegedirectory.entities.StudentProfile;
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.DepartmentRepository;
+import com.example.collegedirectory.repositories.FacultyProfileRepository;
+import com.example.collegedirectory.repositories.StudentProfileRepository;
+import com.example.collegedirectory.repositories.UserRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
+    @Autowired
+    private StudentProfileRepository studentProfileRepository;
+
+    @Autowired
+    private FacultyProfileRepository facultyProfileRepository;
+
+    public User authenticate(String username, String password, String role) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            try {
+                Role providedRole = Role.valueOf(role.trim().toUpperCase());
+                if (user.getPassword().equals(password) && user.getRole() == providedRole) {
+                    return user;
+                }
+            } catch (IllegalArgumentException e) {
+                // Handle invalid role here if necessary
+            }
+        }
+        return null;
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
+    public User addStudent(User user, String departmentName, String year) {
+        user.setRole(Role.STUDENT);
+        User savedUser = userRepository.save(user);
+
+        // Retrieve the department using the department name
+        Department department = departmentRepository.findByName(departmentName);
+        if (department == null) {
+            throw new IllegalArgumentException("Department not found");
+        }
+
+        // Create a new StudentProfile
+        StudentProfile studentProfile = new StudentProfile();
+        studentProfile.setUser(savedUser);
+        studentProfile.setDepartment(department);
+        studentProfile.setYear(year);
+
+        // Save the StudentProfile
+        studentProfileRepository.save(studentProfile);
+
+        return savedUser;
+    }
+
+    public User addFaculty(User user, String departmentName, String officeHours) {
+        user.setRole(Role.FACULTY_MEMBER);
+        User savedUser = userRepository.save(user);
+
+        // Retrieve the department using the department name
+        Department department = departmentRepository.findByName(departmentName);
+        if (department == null) {
+            throw new IllegalArgumentException("Department not found");
+        }
+
+        // Create a new FacultyProfile
+        FacultyProfile facultyProfile = new FacultyProfile();
+        facultyProfile.setUser(savedUser);
+        facultyProfile.setDepartment(department);
+        facultyProfile.setOfficeHours(officeHours);
+
+        // Save the FacultyProfile
+        facultyProfileRepository.save(facultyProfile);
+
+        return savedUser;
+    }
+
+    public List<User> findAllStudents() {
+        return userRepository.findAllByRole(Role.STUDENT);
+    }
+
+    public List<User> findAllFaculties() {
+        return userRepository.findAllByRole(Role.FACULTY_MEMBER);
+    }
+
+    public User updateStudent(Long id, User updatedUser, String departmentName, Object yearObj) {
+        User existingUser = userRepository.findById(id).orElse(null);
+        if (existingUser != null) {
+            // Update the user fields
+            existingUser.setName(updatedUser.getName());
+            existingUser.setUsername(updatedUser.getUsername());
+            existingUser.setEmail(updatedUser.getEmail());
+            existingUser.setPhone(updatedUser.getPhone());
+            existingUser.setPassword(updatedUser.getPassword());
+
+            // Update the student profile
+            StudentProfile studentProfile = studentProfileRepository.findByUser(existingUser);
+            if (studentProfile != null) {
+                // Update department
+                Department department = departmentRepository.findByName(departmentName);
+                if (department != null) {
+                    studentProfile.setDepartment(department);
+                }
+
+                // Handle the year field correctly
+                String year;
+                if (yearObj instanceof Integer) {
+                    year = String.valueOf(yearObj);
+                } else if (yearObj instanceof String) {
+                    year = (String) yearObj;
+                } else {
+                    throw new IllegalArgumentException("Year must be a String or Integer");
+                }
+                studentProfile.setYear(year);
+
+                studentProfileRepository.save(studentProfile);
+            }
+
+            return userRepository.save(existingUser);
+        }
+        return null; // User not found
+    }
+
+    public User updateFaculty(Long id, User updatedUser, String departmentName, String officeHours) {
+        User existingUser = userRepository.findById(id).orElse(null);
+        if (existingUser != null) {
+            // Update the user fields
+            existingUser.setName(updatedUser.getName());
+            existingUser.setUsername(updatedUser.getUsername());
+            existingUser.setEmail(updatedUser.getEmail());
+            existingUser.setPhone(updatedUser.getPhone());
+            existingUser.setPassword(updatedUser.getPassword());
+
+            // Update the faculty profile
+            FacultyProfile facultyProfile = facultyProfileRepository.findByUser(existingUser);
+            if (facultyProfile != null) {
+                // Update department
+                Department department = departmentRepository.findByName(departmentName);
+                if (department != null) {
+                    facultyProfile.setDepartment(department);
+                }
+
+                // Update office hours
+                facultyProfile.setOfficeHours(officeHours);
+
+                facultyProfileRepository.save(facultyProfile);
+            }
+
+            return userRepository.save(existingUser);
+        }
+        return null; // User not found
+    }
+
+    public boolean deleteUser(Long id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true; // Deletion successful
+        }
+        return false; // User not found
+    }
+}

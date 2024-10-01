@@ -1,0 +1,47 @@
+package com.example.collegedirectory.services;
+
+import com.example.collegedirectory.entities.Department;
+import com.example.collegedirectory.entities.StudentProfile;
+import com.example.collegedirectory.repositories.DepartmentRepository;
+import com.example.collegedirectory.repositories.StudentProfileRepository;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class StudentProfileService {
+
+    @Autowired
+    private StudentProfileRepository studentProfileRepository;
+    
+    @Autowired
+    private DepartmentRepository departmentRepository;
+    
+    public StudentProfile findById(Long id) {
+        return studentProfileRepository.findById(id).orElse(null); // Return null if not found
+    }
+    
+    public Map<String, Object> getStudentAcademicDetails(Long userId) {
+        // Retrieve student profile by userId
+        StudentProfile studentProfile = studentProfileRepository.findByUserId(userId);
+        if (studentProfile == null) {
+            throw new RuntimeException("Student not found.");
+        }
+
+        // Retrieve the department by departmentId
+        Department department = departmentRepository.findById(studentProfile.getDepartmentId());
+        if (department == null) {
+            throw new RuntimeException("Department not found.");
+        }
+
+        // Prepare response data
+        Map<String, Object> academicDetails = new HashMap<>();
+        academicDetails.put("year", studentProfile.getYear());
+        academicDetails.put("department", department.getName());
+
+        return academicDetails;
+    }
+}

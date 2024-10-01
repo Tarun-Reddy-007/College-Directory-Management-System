@@ -1,0 +1,43 @@
+package com.example.collegedirectory.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.Optional;
+import com.example.collegedirectory.entities.Role;
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.UserRepository;
+
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+
+    public boolean authenticate(String username, String password, String role) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            System.out.println("Found user: " + user);
+
+            // Compare roles
+            boolean roleMatches = false;
+
+            try {
+                // Convert the provided role string to Role enum and check for equality
+                Role providedRole = Role.valueOf(role.trim().toUpperCase()); // Convert to upper case for matching
+                roleMatches = user.getRole() == providedRole; // Compare enum values
+            } catch (IllegalArgumentException e) {
+                System.out.println("Provided role is invalid: " + role);
+            }
+
+            boolean passwordMatches = user.getPassword().equals(password);
+            System.out.println("Password matches: " + passwordMatches);
+            System.out.println("Role matches: " + roleMatches);
+
+            if (passwordMatches && roleMatches) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+}

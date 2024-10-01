@@ -1,0 +1,51 @@
+package com.example.collegedirectory.services;
+
+import com.example.collegedirectory.entities.FacultyAdvisors;
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.FacultyAdvisorsRepository;
+import com.example.collegedirectory.repositories.UserRepository; // Assuming you have a UserRepository
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FacultyAdvisorsService {
+
+    @Autowired
+    private FacultyAdvisorsRepository facultyAdvisorsRepository;
+
+    @Autowired
+    private UserRepository userRepository; // Assuming you have a UserRepository to get users by ID
+
+    public boolean addFacultyAdvisor(Long studentId, Long facultyId) {
+        User student = userRepository.findById(studentId);
+        User faculty = userRepository.findById(facultyId);
+
+        // Check if the student already has a faculty advisor
+        if (facultyAdvisorsRepository.findByStudent(student) != null) {
+            return false; // Student already has a faculty advisor
+        }
+
+        FacultyAdvisors facultyAdvisors = new FacultyAdvisors();
+        facultyAdvisors.setStudent(student);
+        facultyAdvisors.setFaculty(faculty);
+
+        facultyAdvisorsRepository.save(facultyAdvisors);
+        return true; // Successfully added the faculty advisor
+    }
+    public boolean deleteFacultyAdvisor(Long studentId) {
+        User student = userRepository.findById(studentId);
+        FacultyAdvisors facultyAdvisor = facultyAdvisorsRepository.findByStudent(student);
+        
+        if (facultyAdvisor != null) {
+            facultyAdvisorsRepository.delete(facultyAdvisor);
+            return true; // Successfully deleted
+        }
+        
+        return false; // No faculty advisor found for the student
+    }
+    
+}

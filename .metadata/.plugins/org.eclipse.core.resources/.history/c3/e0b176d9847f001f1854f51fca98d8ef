@@ -1,0 +1,66 @@
+package com.example.collegedirectory.services;
+
+import com.example.collegedirectory.entities.FacultyAdvisors;
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.FacultyAdvisorsRepository;
+import com.example.collegedirectory.repositories.UserRepository; // Assuming you have a UserRepository
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class FacultyAdvisorsService {
+
+    @Autowired
+    private FacultyAdvisorsRepository facultyAdvisorsRepository;
+
+    @Autowired
+    private UserRepository userRepository; // Assuming you have a UserRepository to get users by ID
+
+    public boolean addFacultyAdvisor(Long studentId, Long facultyId) {
+        User student = userRepository.findById(studentId);
+        User faculty = userRepository.findById(facultyId);
+
+        // Check if the student already has a faculty advisor
+        if (facultyAdvisorsRepository.findByStudent(student) != null) {
+            return false; // Student already has a faculty advisor
+        }
+
+        FacultyAdvisors facultyAdvisors = new FacultyAdvisors();
+        facultyAdvisors.setStudent(student);
+        facultyAdvisors.setFaculty(faculty);
+
+        facultyAdvisorsRepository.save(facultyAdvisors);
+        return true; // Successfully added the faculty advisor
+    }
+    public boolean deleteFacultyAdvisor(Long studentId) {
+        User student = userRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
+        FacultyAdvisors facultyAdvisor = facultyAdvisorsRepository.findByStudent(student);
+        
+        if (facultyAdvisor != null) {
+            facultyAdvisorsRepository.delete(facultyAdvisor);
+            return true; // Successfully deleted
+        }
+        
+        return false; // No faculty advisor found for the student
+    }
+    public Map<String, Object> getFacultyDetails(Long userId) {
+        User student = userRepository.findById(userId);
+        
+        FacultyAdvisors facultyAdvisor = facultyAdvisorsRepository.findByStudent(student);
+        if (facultyAdvisor != null) {
+            User faculty = facultyAdvisor.getFaculty();
+            
+            Map<String, Object> facultyDetails = new HashMap<>();
+            facultyDetails.put("facultyId", faculty.getId());
+            facultyDetails.put("name", faculty.getName());
+            facultyDetails.put("username", faculty.getUsername());
+            facultyDetails.put("phone", faculty.getPhone());
+            facultyDetails.put("email", faculty.getEmail());
+            facultyDetails.put("departmentName", faculty.getDepartment());
+            facultyDetails.put("workingHours", faculty.getOfficeHours());
+            
+            return facultyDetails;
+        }
+        return null; // Or throw an exception if needed
+    }
+}

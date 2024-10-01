@@ -1,0 +1,64 @@
+package com.example.collegedirectory.entities;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "StudentProfile")
+public class StudentProfile {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer userId;
+
+    private String photo;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
+    private String year;
+
+    // Constructors
+    public StudentProfile() {
+    }
+
+    public StudentProfile(Integer userId, String photo, Department department, String year) {
+        this.userId = userId;
+        this.photo = photo;
+        this.department = department;
+        this.year = year;
+    }
+
+    // Getters and Setters
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+}

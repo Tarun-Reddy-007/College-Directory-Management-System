@@ -1,0 +1,98 @@
+/* Main container styling */
+.student-academics-container {
+    padding: 20px; /* Inner spacing */
+    max-width: 1200px; /* Maximum width */
+    margin: auto; /* Center alignment */
+    background-color: #f7f9fc; /* Light background for contrast */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Title styling */
+.student-academics-title {
+    font-size: 28px; /* Title font size */
+    color: #333; /* Dark text color */
+    margin-bottom: 15px; /* Space below title */
+    text-align: left; /* Align left for spacious feel */
+}
+
+/* Detail text styling */
+.student-academic-detail {
+    font-size: 18px; /* Font size for details */
+    margin: 10px 0; /* Vertical margin */
+    color: #555; /* Medium grey text */
+}
+
+/* Faculty advisor section title */
+.faculty-advisor-title {
+    font-size: 24px; /* Title font size */
+    margin-top: 20px; /* Space above section */
+    color: #333; /* Dark text color */
+    border-bottom: 2px solid #007bff; /* Bottom border */
+    padding-bottom: 5px; /* Padding below title */
+}
+
+/* Faculty advisor info card */
+.faculty-advisor-card {
+    background-color: #ffffff; /* White background for the card */
+    border-radius: 8px; /* Rounded corners */
+    padding: 15px; /* Inner spacing */
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin: 10px 0; /* Margin around the card */
+}
+
+/* Faculty advisor text styling */
+.faculty-advisor-card p {
+    margin: 5px 0; /* Space between paragraphs */
+}
+
+/* Enrolled courses section title */
+.enrolled-courses-title {
+    font-size: 24px; /* Title font size */
+    margin-top: 30px; /* Space above section */
+    color: #333; /* Dark text color */
+    border-bottom: 2px solid #007bff; /* Bottom border */
+    padding-bottom: 5px; /* Padding below title */
+}
+
+/* Enrolled courses list styling */
+.enrolled-courses-list {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
+}
+
+/* Each course item styling */
+.enrolled-course-item {
+    padding: 10px; /* Inner spacing */
+    border-bottom: 1px solid #ddd; /* Divider line between items */
+    color: #333; /* Dark text color */
+}
+
+/* Last item in list without bottom border */
+.enrolled-course-item:last-child {
+    border-bottom: none; /* Remove border for last item */
+}
+
+/* Message when no courses are found */
+.no-courses-message {
+    font-style: italic; /* Italic style */
+    color: #777; /* Light grey color */
+    text-align: center; /* Center alignment */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .student-academics-container {
+        padding: 15px; /* Adjust inner spacing for smaller screens */
+    }
+
+    .student-academics-title {
+        font-size: 24px; /* Adjust font size for smaller screens */
+    }
+
+    .student-academic-detail,
+    .faculty-advisor-title,
+    .enrolled-courses-title {
+        font-size: 18px; /* Adjust font size for smaller screens */
+    }
+}

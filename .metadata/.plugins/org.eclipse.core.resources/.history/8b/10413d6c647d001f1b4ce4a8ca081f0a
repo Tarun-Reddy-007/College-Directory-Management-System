@@ -1,0 +1,25 @@
+package com.example.collegedirectory.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.UserRepository;
+
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+
+    public boolean authenticate(String username, String password, String role) {
+        User user = userRepository.findByUsername(username);
+        System.out.println("Found user: " + user); // Debug log
+        if (user != null) {
+            System.out.println("User role: " + user.getRole() + ", provided role: " + role); // Debug log
+        }
+        if (user != null && user.getPassword().equals(password) && user.getRole().equals(role)) {
+            return true;
+        }
+        return false;
+    }
+
+}

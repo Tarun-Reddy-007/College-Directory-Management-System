@@ -1,0 +1,125 @@
+/* General Styles */
+.faculty-student-database-container {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    padding: 20px;
+    box-sizing: border-box;
+    width:100%;
+    margin: 0 auto;
+}
+
+.faculty-student-database-container h2 {
+    color: #333;
+    font-size: 24px;
+    margin-bottom: 20px;
+    padding-left: 15px;
+}
+
+/* Course Buttons Container */
+.faculty-course-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    overflow-x: auto; /* Make buttons scrollable if too many */
+    white-space: nowrap;
+    padding: 10px 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+/* Course Button Styling */
+.faculty-course-button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    white-space: nowrap;
+}
+
+.faculty-course-button:hover {
+    background-color: #0056b3;
+}
+
+.faculty-course-button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Error Message Styling */
+.faculty-error-message {
+    color: red;
+    padding-left: 15px;
+    margin-bottom: 15px;
+}
+
+/* Student Details Table */
+.faculty-student-details-table-container {
+    overflow-x: auto;
+}
+
+.faculty-student-details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.faculty-student-details-table th, 
+.faculty-student-details-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.faculty-student-details-table th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: bold;
+}
+
+.faculty-student-details-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.faculty-student-details-table tbody tr:hover {
+    background-color: #e9ecef;
+}
+
+/* No Data Paragraph */
+.faculty-no-student-data {
+    text-align: center;
+    font-size: 18px;
+    color: #666;
+    margin-top: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .faculty-course-container {
+        justify-content: flex-start;
+    }
+
+    .faculty-student-details-table {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .faculty-course-button {
+        font-size: 14px;
+        padding: 8px 12px;
+    }
+
+    .faculty-student-details-table th, 
+    .faculty-student-details-table td {
+        padding: 10px;
+    }
+}

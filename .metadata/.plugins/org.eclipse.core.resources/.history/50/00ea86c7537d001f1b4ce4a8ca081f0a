@@ -1,0 +1,26 @@
+// src/main/java/com/example/collegedirectory/services/UserService.java
+package com.example.collegedirectory.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.UserRepository;
+
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    public User createUser(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword())); // Encrypt the password
+        return userRepository.save(user);
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+}

@@ -1,0 +1,49 @@
+package com.example.collegedirectory.controllers;
+
+import com.example.collegedirectory.repositories.StudentProfileRepository;
+import com.example.collegedirectory.services.GraphService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/graphs")
+public class GraphController {
+
+    @Autowired
+    private GraphService graphService;
+    
+    @Autowired
+    private StudentProfileRepository studentProfileRepository;
+
+    // Endpoint to get enrollment trends
+    @GetMapping("/enrollment-trends")
+    public Map<String, Integer> getEnrollmentTrends() {
+        return graphService.getEnrollmentTrends();
+    }
+
+    // Endpoint to get faculty course loads
+    @GetMapping("/faculty-course-loads")
+    public Map<Long, Integer> getFacultyCourseLoads() {
+        return graphService.getFacultyCourseLoads();
+    }
+
+    @GetMapping("/api/graphs/students-per-department")
+    public Map<String, Long> getStudentsPerDepartment() {
+        List<Object[]> result = studentProfileRepository.countStudentsByDepartment();
+        Map<String, Long> departmentStudentCount = new HashMap<>();
+
+        for (Object[] row : result) {
+            String departmentName = (String) row[0];
+            Long studentCount = (Long) row[1];
+            departmentStudentCount.put(departmentName, studentCount);
+        }
+
+        return departmentStudentCount;
+    }
+}

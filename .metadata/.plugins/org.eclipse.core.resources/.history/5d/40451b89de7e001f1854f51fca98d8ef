@@ -1,0 +1,51 @@
+package com.example.collegedirectory.controllers;
+
+import com.example.collegedirectory.entities.Enrollment;
+import com.example.collegedirectory.services.EnrollmentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/enrollments")
+public class EnrollmentController {
+
+    @Autowired
+    private EnrollmentService enrollmentService;
+
+    @PostMapping("/enroll")
+    public ResponseEntity<String> enrollStudent(@RequestBody Enrollment enrollment) {
+        System.out.println(enrollment.getStudent());
+        System.out.println(enrollment.getCourse());
+        
+        try {
+            // Ensure student ID and course ID are provided
+            if (enrollment.getStudent() == null || enrollment.getCourse() == null) {
+                return ResponseEntity.badRequest().body("Student and Course must not be null.");
+            }
+
+            // Fetch the StudentProfile and Course from the database using their IDs
+            StudentProfile student = studentService.findById(enrollment.getStudent().getId());
+            Course course = courseService.findById(enrollment.getCourse().getId());
+
+            // Check if the student and course exist
+            if (student == null) {
+                return ResponseEntity.badRequest().body("Student does not exist.");
+            }
+            if (course == null) {
+                return ResponseEntity.badRequest().body("Course does not exist.");
+            }
+
+            // Set the fetched student and course to enrollment
+            enrollment.setStudent(student);
+            enrollment.setCourse(course);
+
+            // Save the enrollment
+            enrollmentService.enrollStudent(enrollment);
+            return ResponseEntity.ok("Enrollment successful");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Enrollment failed: " + e.getMessage());
+        }
+    }
+
+}

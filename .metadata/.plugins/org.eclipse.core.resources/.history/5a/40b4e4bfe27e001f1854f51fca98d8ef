@@ -1,0 +1,75 @@
+package com.example.collegedirectory.controllers;
+
+import com.example.collegedirectory.entities.Course;
+import com.example.collegedirectory.entities.Enrollment;
+import com.example.collegedirectory.entities.StudentProfile;
+import com.example.collegedirectory.services.CourseService;
+import com.example.collegedirectory.services.EnrollmentService;
+import com.example.collegedirectory.services.StudentProfileService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/enrollments")
+public class EnrollmentController {
+
+    @Autowired
+    private EnrollmentService enrollmentService;
+    
+    @Autowired
+    private StudentProfileService studentProfileService;// Ensure this is an instance variable
+
+    @Autowired
+    private CourseService courseService;
+    
+    @PostMapping("/enroll")
+    public ResponseEntity<String> enrollStudent(@RequestBody Enrollment enrollment) {
+        System.out.println("Received enrollment request: " + enrollment);
+        try {
+            // Ensure student ID and course ID are provided
+            if (enrollment.getStudent() == null || enrollment.getCourse() == null) {
+                return ResponseEntity.badRequest().body("Student and Course must not be null.");
+            }
+            System.out.println("&&&&&&&&&&&&&");
+            // Ensure student ID and course ID are not null
+            if (enrollment.getStudent().getUserId() == null) {  // Update this line
+                return ResponseEntity.badRequest().body("Student ID must not be null.");
+            }
+            System.out.println("&&&&&&&&&&&&&");
+            if (enrollment.getCourse().getId() == null) {  // This line is already correct
+                return ResponseEntity.badRequest().body("Course ID must not be null.");
+            }
+            System.out.println("&&&&&&&&&&&&&");
+            // Fetch the StudentProfile and Course from the database using their IDs
+            StudentProfile student = studentProfileService.findById(enrollment.getStudent().getUserId()); // Update this line
+            Course course = courseService.findById(enrollment.getCourse().getId());
+            
+            System.out.println("Fetched student: " + student);
+            System.out.println("Fetched course: " + course);
+
+            // Check if the student and course exist
+            if (student == null) {
+                return ResponseEntity.badRequest().body("Student does not exist.");
+            }
+            if (course == null) {
+                return ResponseEntity.badRequest().body("Course does not exist.");
+            }
+
+            // Set the fetched student and course to enrollment
+            enrollment.setStudent(student);
+            enrollment.setCourse(course);
+
+            // Save the enrollment
+            enrollmentService.enrollStudent(enrollment);
+            return ResponseEntity.ok("Enrollment successful");
+        } catch (Exception e) {
+            System.err.println("Error occurred: " + e.getMessage());
+            e.printStackTrace(); // Print the stack trace for more context
+            return ResponseEntity.status(500).body("Enrollment failed: " + e.getMessage());
+        }
+    }
+
+
+}

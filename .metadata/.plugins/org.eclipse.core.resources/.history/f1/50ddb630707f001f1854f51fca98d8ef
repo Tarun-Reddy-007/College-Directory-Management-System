@@ -1,0 +1,23 @@
+package com.example.collegedirectory.controllers;
+
+import com.example.collegedirectory.services.FacultyService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/faculties")
+public class FacultyProfileController {
+
+    @Autowired
+    private FacultyService facultyService;
+
+    @GetMapping("/getallfaculties")
+    public List<Map<String, Object>> getAllFaculties() {
+        return facultyService.getAllFaculties();
+    }
+}

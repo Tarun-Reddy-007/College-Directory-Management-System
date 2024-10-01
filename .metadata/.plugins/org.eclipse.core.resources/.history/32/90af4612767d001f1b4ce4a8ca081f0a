@@ -1,0 +1,42 @@
+package com.example.collegedirectory.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.example.collegedirectory.entities.Role;
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.UserRepository;
+
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+
+    // Updated method to return User object instead of boolean
+    public User authenticate(String username, String password, String role) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            try {
+                // Convert the provided role string to Role enum and check for equality
+                Role providedRole = Role.valueOf(role.trim().toUpperCase()); // Convert to upper case for matching
+                if (user.getPassword().equals(password) && user.getRole() == providedRole) {
+                    return user; // Return user object if authentication is successful
+                }
+            } catch (IllegalArgumentException e) {
+                // Handle invalid role here if necessary (e.g., log it)
+            }
+        }
+        return null; // Return null if user not found or credentials do not match
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+    
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+    
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+}

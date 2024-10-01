@@ -1,0 +1,38 @@
+package com.example.collegedirectory.controllers;
+
+import com.example.collegedirectory.entities.FacultyAdvisors;
+import com.example.collegedirectory.services.FacultyAdvisorsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/facultyAdvisors")
+public class FacultyAdvisorsController {
+
+    @Autowired
+    private FacultyAdvisorsService facultyAdvisorsService;
+
+    // POST request to add a new faculty advisor mapping
+    @RestController
+    @RequestMapping("/api/facultyAdvisors")
+    public class FacultyAdvisorsController {
+
+        @Autowired
+        private FacultyAdvisorsService facultyAdvisorsService;
+
+        // POST request to add a new faculty advisor mapping
+        @PostMapping("/addfacultyadvisor")
+        public ResponseEntity<FacultyAdvisors> addFacultyAdvisor(@RequestBody Map<String, Long> ids) {
+            Long studentId = ids.get("studentId");
+            Long facultyId = ids.get("facultyId");
+
+            System.out.println(studentId);
+            System.out.println(facultyId);
+            
+            FacultyAdvisors facultyAdvisors = facultyAdvisorsService.addFacultyAdvisor(studentId, facultyId);
+            return ResponseEntity.ok(facultyAdvisors);
+        }
+    }
+
+}

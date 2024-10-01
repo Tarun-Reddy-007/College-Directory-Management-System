@@ -1,0 +1,5 @@
+package com.example.collegedirectory.config;
+
+public class WebConfig {
+
+}

@@ -1,0 +1,104 @@
+.student-home-container {
+    display: flex;
+    height: 100vh; /* Full height of the viewport */
+    font-family: 'Arial', sans-serif; /* Consistent font family */
+}
+
+/* Left Pane Styling (Updated to match admin-left-pane) */
+.student-left-pane {
+    width: 25%; /* Left pane takes 25% of the width */
+    background-color: #e6f7ff; /* Light pastel blue background */
+    padding: 20px; /* Padding for the left pane */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Light shadow */
+}
+
+.student-left-pane ul {
+    list-style-type: none; /* Remove default list styles */
+    padding: 0; /* Remove padding */
+    margin: 0; /* Remove margin */
+}
+
+.student-left-pane li {
+    margin: 10px 0; /* Space between list items */
+    padding: 12px; /* Padding for list items */
+    border-radius: 8px; /* Slightly more rounded corners */
+    cursor: pointer; /* Change cursor on hover */
+    background-color: #ffffff; /* White background for list items */
+    color: #333; /* Dark grey text color */
+    transition: background-color 0.3s, color 0.3s; /* Smooth background change */
+}
+
+.student-left-pane li:hover {
+    background-color: #cceeff; /* Light pastel hover effect */
+    color: #004466; /* Slightly darker text color on hover */
+}
+
+/* Logout Button Styling (Same as admin) */
+button {
+    margin-top: 20px;
+    padding: 10px 15px;
+    width: 100%;
+    background-color: #4da6ff; /* Soft blue button */
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #3399ff; /* Darker blue on hover */
+}
+
+
+/* Right Pane Styling */
+.student-right-pane {
+    width: 75%; /* Right pane takes 75% of the width */
+    padding: 20px; /* Padding for the right pane */
+    background-color: #f9f9f9; /* Soft grey background */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Align items at the top */
+    align-items: center; /* Center content horizontally */
+}
+
+.student-right-pane h1 {
+    font-size: 2rem; /* Larger font for the main heading */
+    color: #004466; /* Dark blue text for the main heading */
+    margin-bottom: 20px; /* Space below the heading */
+}
+
+.student-right-pane h3 {
+    font-size: 1.5rem; /* Subheading font size */
+    color: #666666; /* Light grey for the subheading */
+}
+
+.student-right-pane p {
+    font-size: 1rem;
+    color: #555555; /* Mid-grey text for content */
+    line-height: 1.6;
+}
+
+/* Additional content styling for consistency */
+.student-right-pane table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.student-right-pane table th, 
+.student-right-pane table td {
+    padding: 12px;
+    border: 1px solid #cccccc; /* Soft grey borders */
+}
+
+.student-right-pane table th {
+    background-color: #e0f0ff; /* Soft blue for headers */
+    color: #004466; /* Dark blue text */
+    font-weight: bold;
+}
+
+.student-right-pane table td {
+    background-color: #ffffff; /* White background for cells */
+    color: #333; /* Dark grey text */
+}

@@ -1,0 +1,15 @@
+package com.example.collegedirectory.repositories;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import com.example.collegedirectory.entities.Department;
+
+@Repository
+public interface DepartmentRepository extends JpaRepository<Department, Long> {
+    // Custom query to return only the department ID by its name
+    @Query("SELECT d.id FROM Department d WHERE d.name = :name")
+    Long findIdByName(@Param("name") String name);
+}

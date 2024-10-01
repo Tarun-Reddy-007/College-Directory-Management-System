@@ -1,0 +1,24 @@
+package com.example.collegedirectory.services;
+
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class FacultyProfileService {
+
+    @Autowired
+    private UserRepository userRepository;
+
+    public List<FacultyResponse> getAllFaculties() {
+        List<User> faculties = userRepository.findByRole(Role.FACULTY); // Assuming 'FACULTY' is the role for faculty members
+        return faculties.stream().map(faculty -> {
+            String departmentName = faculty.getDepartment(); // This will fetch the department name from the faculty profile
+            return new FacultyResponse(faculty.getId(), faculty.getName(), faculty.getPhone(), faculty.getEmail(), departmentName);
+        }).collect(Collectors.toList());
+    }
+}

@@ -1,0 +1,10 @@
+package com.example.collegedirectory.repositories;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.collegedirectory.entities.Enrollment;
+
+public interface EnrollmentRepository extends JpaRepository<Enrollment, Long> {
+    List<Enrollment> findByStudent_UserId(Long userId);
+}

@@ -1,0 +1,115 @@
+package com.example.collegedirectory.services;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import com.example.collegedirectory.entities.Department; // Ensure this import exists
+import com.example.collegedirectory.entities.StudentProfile; // Ensure this import exists
+import com.example.collegedirectory.entities.Role;
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.UserRepository;
+import com.example.collegedirectory.repositories.DepartmentRepository;
+import com.example.collegedirectory.repositories.StudentProfileRepository;
+
+@Service
+public class UserService {
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private DepartmentRepository departmentRepository; // Add this line
+
+    @Autowired
+    private StudentProfileRepository studentProfileRepository; // Add this line
+
+    // Updated method to return User object instead of boolean
+    public User authenticate(String username, String password, String role) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            try {
+                // Convert the provided role string to Role enum and check for equality
+                Role providedRole = Role.valueOf(role.trim().toUpperCase()); // Convert to upper case for matching
+                if (user.getPassword().equals(password) && user.getRole() == providedRole) {
+                    return user; // Return user object if authentication is successful
+                }
+            } catch (IllegalArgumentException e) {
+                // Handle invalid role here if necessary (e.g., log it)
+            }
+        }
+        return null; // Return null if user not found or credentials do not match
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+    
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
+    }
+    
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+    
+    public User addStudent(User user, String departmentName, String year) {
+        user.setRole(Role.STUDENT); // Set the role to STUDENT
+        User savedUser = userRepository.save(user); // Save the user first
+
+        // Now retrieve the department ID using the department name
+        Department department = departmentRepository.findByName(departmentName);
+        System.out.println("Department found: " + department);
+
+        if (department == null) {
+            throw new IllegalArgumentException("Department not found");
+        }
+
+        // Create a new StudentProfile
+        StudentProfile studentProfile = new StudentProfile();
+        studentProfile.setUser(savedUser); // Set the saved user
+        studentProfile.setDepartment(department); // Set the department
+        studentProfile.setYear(year); // Set the year
+
+        // Save the StudentProfile
+        studentProfileRepository.save(studentProfile);
+
+        return savedUser; // Return the saved user
+    }
+
+    
+    public User addFaculty(User user) {
+        user.setRole(Role.FACULTY_MEMBER); // Hardcoded to STUDENT role
+        return userRepository.save(user);
+    }
+    
+ // Add this method to UserService
+    public List<User> findAllStudents() {
+        return userRepository.findAllByRole(Role.STUDENT);
+    }
+    
+    public List<User> findAllFaculties() {
+        return userRepository.findAllByRole(Role.FACULTY_MEMBER);
+    }
+    
+    public User updateUser(Long id, User updatedUser) {
+        User existingUser = userRepository.findById(id).orElse(null);
+        if (existingUser != null) {
+            // Update the fields you want to change
+        	existingUser.setName(updatedUser.getName());
+            existingUser.setUsername(updatedUser.getUsername());
+            existingUser.setEmail(updatedUser.getEmail());
+            existingUser.setPhone(updatedUser.getPhone());  // Assuming there's a phone field
+            existingUser.setPassword(updatedUser.getPassword());  // Only if you're allowing password updates
+            // Don't update the role unless intended
+            return userRepository.save(existingUser);  // Save changes to the repository
+        }
+        return null;  // User not found, handle as necessary
+    }
+
+    public boolean deleteUser(Long id) {
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+            return true; // Deletion successful
+        }
+        return false; // User not found
+    }
+}

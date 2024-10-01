@@ -1,0 +1,170 @@
+package com.example.collegedirectory.controllers;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.example.collegedirectory.entities.Role;
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.DepartmentRepository;
+import com.example.collegedirectory.repositories.StudentProfileRepository;
+import com.example.collegedirectory.repositories.UserRepository;
+import com.example.collegedirectory.services.UserService;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserController {
+	@Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private StudentProfileRepository studentProfileRepository;
+
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, Object>> login(@RequestBody Map<String, String> credentials) {
+        String username = credentials.get("username");
+        String password = credentials.get("password");
+        String role = credentials.get("role");
+        
+		// Call the updated authenticate method
+        User user = userService.authenticate(username, password, role); 
+        
+        if (user != null) {
+            // If user is authenticated, return the user ID along with a success message
+            return ResponseEntity.ok(Map.of(
+                "message", "Login successful",
+                "userId", user.getId() // Assuming User has a getId() method
+            ));
+        } else {
+            return ResponseEntity.status(401).body(Map.of("message", "Invalid username, password, or role"));
+        }
+    }
+    
+    @GetMapping("/username/{username}")
+    public ResponseEntity<User> getUserDetailsByUsername(@PathVariable String username) {
+        User user = userService.findByUsername(username);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @GetMapping("/getid/{id}")
+    public ResponseEntity<User> getUserDetailsById(@PathVariable Long id) {
+        User user = userService.findById(id);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PutMapping("/updateid/{id}")
+    public ResponseEntity<User> updateUserDetails(@PathVariable Long id, @RequestBody User updatedUser) {
+        User user = userService.findById(id);
+        if (user != null) {
+            user.setUsername(updatedUser.getUsername());
+            user.setEmail(updatedUser.getEmail());
+            user.setRole(updatedUser.getRole());
+            userService.save(user); // Make sure the UserService has a save method to update the user in the database
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @PostMapping("/addstudent")
+    public ResponseEntity<?> addStudent(@RequestBody StudentProfileDTO studentProfileDTO) {
+        // Create a new User
+        User user = new User();
+        user.setName(studentProfileDTO.getName());
+        user.setUsername(studentProfileDTO.getUsername());
+        user.setEmail(studentProfileDTO.getEmail());
+        user.setPhone(studentProfileDTO.getPhone());
+        user.setPassword(studentProfileDTO.getPassword()); // You might want to hash this
+        user.setRole(Role.STUDENT); // Set the appropriate role
+        user = userRepository.save(user);
+
+        // Create a new StudentProfile
+        StudentProfile studentProfile = new StudentProfile();
+        studentProfile.setUser(user);
+        studentProfile.setYear(studentProfileDTO.getYear());
+
+        // Fetch department by its ID
+        Department department = departmentRepository.findById(studentProfileDTO.getDepartmentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Department not found"));
+        studentProfile.setDepartment(department);
+
+        studentProfileRepository.save(studentProfile);
+        return ResponseEntity.ok("Student added successfully");
+    }
+}
+    @GetMapping("/getallstudents")
+    public ResponseEntity<List<User>> getAllStudents() {
+        List<User> students = userService.findAllStudents();
+        return ResponseEntity.ok(students);
+    }
+    
+    @PutMapping("/updatestudent/{id}")
+    public ResponseEntity<User> updateStudent(@PathVariable Long id, @RequestBody User updatedUser) {
+        User user = userService.updateUser(id, updatedUser);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // Delete a student
+    @DeleteMapping("/deletestudent/{id}")
+    public ResponseEntity<Map<String, String>> deleteStudent(@PathVariable Long id) {
+        boolean isDeleted = userService.deleteUser(id);
+        if (isDeleted) {
+            return ResponseEntity.ok(Map.of("message", "Student deleted successfully"));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @PostMapping("/addfaculty")
+    public ResponseEntity<User> addFaculty(@RequestBody User newUser) {
+    	try {
+    	    User savedUser = userService.addFaculty(newUser);
+    	    return ResponseEntity.status(201).body(savedUser);
+    	} catch (Exception e) {
+    	    e.printStackTrace();
+    	    return ResponseEntity.status(500).body(null);
+    	}
+    }
+    
+    @GetMapping("/getallfaculties")
+    public ResponseEntity<List<User>> getAllFaculties() {
+        List<User> faculties = userService.findAllFaculties();
+        return ResponseEntity.ok(faculties);
+    }
+    
+    @PutMapping("/updatefaculty/{id}")
+    public ResponseEntity<User> updateFaculty(@PathVariable Long id, @RequestBody User updatedUser) {
+        User user = userService.updateUser(id, updatedUser);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    
+    @DeleteMapping("/deletefaculty/{id}")
+    public ResponseEntity<Map<String, String>> deleteFaculty(@PathVariable Long id) {
+        boolean isDeleted = userService.deleteUser(id);
+        if (isDeleted) {
+            return ResponseEntity.ok(Map.of("message", "Faculty deleted successfully"));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+}

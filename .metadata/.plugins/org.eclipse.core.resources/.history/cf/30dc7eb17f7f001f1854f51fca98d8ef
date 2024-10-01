@@ -1,0 +1,41 @@
+package com.example.collegedirectory.controllers;
+
+import com.example.collegedirectory.services.FacultyAdvisorsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/facultyAdvisors")
+public class FacultyAdvisorsController {
+
+    @Autowired
+    private FacultyAdvisorsService facultyAdvisorsService;
+
+    @PostMapping("/addfacultyadvisor")
+    public void addFacultyAdvisor(@RequestBody FacultyAdvisorRequest request) {
+        facultyAdvisorsService.addFacultyAdvisor(request.getStudentId(), request.getFacultyId());
+    }
+
+    // Inner class to represent the request body
+    public static class FacultyAdvisorRequest {
+        private Long studentId;
+        private Long facultyId;
+
+        // Getters and Setters
+        public Long getStudentId() {
+            return studentId;
+        }
+
+        public void setStudentId(Long studentId) {
+            this.studentId = studentId;
+        }
+
+        public Long getFacultyId() {
+            return facultyId;
+        }
+
+        public void setFacultyId(Long facultyId) {
+            this.facultyId = facultyId;
+        }
+    }
+}

@@ -1,0 +1,25 @@
+package com.example.collegedirectory.controllers;
+
+import com.example.collegedirectory.entities.Enrollment;
+import com.example.collegedirectory.services.EnrollmentService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/enrollments")
+public class EnrollmentController {
+
+    @Autowired
+    private EnrollmentService enrollmentService;
+
+    @PostMapping("/enroll")
+    public ResponseEntity<String> enrollStudent(@RequestBody Enrollment enrollment) {
+        try {
+            enrollmentService.enrollStudent(enrollment);
+            return ResponseEntity.ok("Enrollment successful");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Enrollment failed: " + e.getMessage());
+        }
+    }
+}

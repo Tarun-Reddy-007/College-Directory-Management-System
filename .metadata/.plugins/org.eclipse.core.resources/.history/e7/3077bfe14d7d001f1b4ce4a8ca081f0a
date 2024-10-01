@@ -1,0 +1,13 @@
+spring.application.name=collegedirectory
+
+# PostgreSQL Database Configuration
+spring.datasource.url=jdbc:postgresql://localhost:5432/collegedirectory
+spring.datasource.username=postgres
+spring.datasource.password=Tarun@1511
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# JPA Hibernate Configurations
+spring.jpa.hibernate.ddl-auto=none  # This is important to prevent Spring from creating or modifying tables
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+
+server.port=8081

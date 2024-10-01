@@ -1,0 +1,13 @@
+package com.example.collegedirectory.repositories;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.collegedirectory.entities.StudentProfile;
+import com.example.collegedirectory.entities.User;
+
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface FacultyProfileRepository extends JpaRepository<FacultyProfile, Long> {
+    StudentProfile findByUserId(Long userId);
+    StudentProfile findByUser(User user);
+}

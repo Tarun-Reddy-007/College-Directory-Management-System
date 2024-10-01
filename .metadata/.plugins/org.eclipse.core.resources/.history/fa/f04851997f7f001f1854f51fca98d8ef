@@ -1,0 +1,7 @@
+package com.example.collegedirectory.repositories;
+
+import com.example.collegedirectory.entities.FacultyAdvisors;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface FacultyAdvisorsRepository extends JpaRepository<FacultyAdvisors, Long> {
+}

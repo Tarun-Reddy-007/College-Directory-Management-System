@@ -1,0 +1,64 @@
+package com.example.collegedirectory.model;
+
+import javax.persistence.*;
+
+@Entity
+public class StudentProfile {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user; // Relationship with User
+
+    private String photo; // URL or path to photo
+
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department; // Assuming you have a Department class
+
+    private String year;
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) { // Ensure this method is defined
+        this.user = user;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) { // Assuming Department has been created
+        this.department = department;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) { // Ensure this method is defined
+        this.year = year;
+    }
+}

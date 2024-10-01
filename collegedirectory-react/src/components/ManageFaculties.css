@@ -1,0 +1,36 @@
+.manage-faculty-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    width: 100%;
+}
+
+.manage-faculty-header {
+    margin-bottom: 20px;
+    margin-left: 40%;
+}
+
+.manage-faculty-filters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.dropdown {
+    width: 150px;
+}
+
+.table-container {
+    margin-top: 20px;
+    width: 100%;
+}
+
+.table {
+    width: 100%;
+}

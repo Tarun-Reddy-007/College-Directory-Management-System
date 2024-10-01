@@ -1,0 +1,20 @@
+package com.example.collegedirectory.controllers;
+
+@RestController
+@RequestMapping("/api/student")
+public class StudentProfileController {
+
+    @Autowired
+    private StudentProfileService studentProfileService;
+
+    @GetMapping("/academics")
+    public ResponseEntity<Map<String, Object>> getStudentAcademics(@RequestParam Long userId) {
+        try {
+            // Fetch academic details using the service
+            Map<String, Object> academicDetails = studentProfileService.getStudentAcademicDetails(userId);
+            return ResponseEntity.ok(academicDetails);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
+    }
+}
