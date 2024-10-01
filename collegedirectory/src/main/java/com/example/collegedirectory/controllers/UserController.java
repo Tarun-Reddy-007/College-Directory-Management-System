@@ -35,14 +35,13 @@ public class UserController {
         String password = credentials.get("password");
         String role = credentials.get("role");
         
-        // Call the updated authenticate method
         User user = userService.authenticate(username, password, role); 
         
         if (user != null) {
-            // If user is authenticated, return the user ID along with a success message
+
             return ResponseEntity.ok(Map.of(
                 "message", "Login successful",
-                "userId", user.getId() // Assuming User has a getId() method
+                "userId", user.getId() 
             ));
         } else {
             return ResponseEntity.status(401).body(Map.of("message", "Invalid username, password, or role"));
@@ -75,7 +74,7 @@ public class UserController {
             user.setUsername(updatedUser.getUsername());
             user.setEmail(updatedUser.getEmail());
             user.setRole(updatedUser.getRole());
-            userService.save(user); // Make sure the UserService has a save method to update the user in the database
+            userService.save(user); 
             return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.notFound().build();
@@ -93,13 +92,12 @@ public class UserController {
 
             String departmentName = (String) request.get("department");
 
-            // Handle the year field correctly
             Object yearObj = request.get("year");
             String year;
             if (yearObj instanceof Integer) {
-                year = String.valueOf(yearObj); // Convert to String
+                year = String.valueOf(yearObj); 
             } else if (yearObj instanceof String) {
-                year = (String) yearObj; // Cast to String
+                year = (String) yearObj; 
             } else {
                 throw new IllegalArgumentException("Year must be a String or Integer");
             }
@@ -108,18 +106,18 @@ public class UserController {
             return ResponseEntity.status(201).body(savedUser);
         } catch (IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());
-            return ResponseEntity.status(400).body(null); // Bad Request
+            return ResponseEntity.status(400).body(null); 
         } catch (Exception e) {
             System.err.println("Error in addStudent: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(500).body(null); // Internal Server Error
+            return ResponseEntity.status(500).body(null); 
         }
     }
 
     @GetMapping("/getallstudents")
     public ResponseEntity<List<User>> getAllStudents() {
         List<User> students = userService.findAllStudents();
-        return ResponseEntity.ok(students);  // The response will include department and year
+        return ResponseEntity.ok(students);  
     }
     
     @PutMapping("/updatestudent/{id}")
@@ -130,11 +128,10 @@ public class UserController {
             updatedUser.setUsername((String) request.get("username"));
             updatedUser.setEmail((String) request.get("email"));
             updatedUser.setPhone((String) request.get("phone"));
-            updatedUser.setPassword((String) request.get("password")); // Only if updating password
+            updatedUser.setPassword((String) request.get("password")); 
 
             String departmentName = (String) request.get("department");
 
-            // Get the year object instead of casting directly to String
             Object yearObj = request.get("year");
 
             User user = userService.updateStudent(id, updatedUser, departmentName, yearObj);
@@ -145,16 +142,14 @@ public class UserController {
             }
         } catch (IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());
-            return ResponseEntity.status(400).body(null); // Bad Request
+            return ResponseEntity.status(400).body(null); 
         } catch (Exception e) {
             System.err.println("Error in updateStudent: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(500).body(null); // Internal Server Error
+            return ResponseEntity.status(500).body(null); 
         }
     }
 
-
-    // Delete a student
     @DeleteMapping("/deletestudent/{id}")
     public ResponseEntity<Map<String, String>> deleteStudent(@PathVariable Long id) {
         boolean isDeleted = userService.deleteUser(id);
@@ -177,7 +172,6 @@ public class UserController {
 
             String departmentName = (String) request.get("department");
 
-            // Handle the office hours field correctly
             String officeHours = (String) request.get("officeHours");
             if (officeHours == null || officeHours.isEmpty()) {
                 throw new IllegalArgumentException("Office Hours must not be empty");
@@ -187,19 +181,12 @@ public class UserController {
             return ResponseEntity.status(201).body(savedUser);
         } catch (IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());
-            return ResponseEntity.status(400).body(null); // Bad Request
+            return ResponseEntity.status(400).body(null);
         } catch (Exception e) {
             System.err.println("Error in addFaculty: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(500).body(null); // Internal Server Error
+            return ResponseEntity.status(500).body(null); 
         }
-    }
-
-    
-    @GetMapping("/getallfaculties")
-    public ResponseEntity<List<User>> getAllFaculties() {
-        List<User> faculties = userService.findAllFaculties();
-        return ResponseEntity.ok(faculties);
     }
     
     @PutMapping("/updatefaculty/{id}")
@@ -210,11 +197,8 @@ public class UserController {
             updatedUser.setUsername((String) request.get("username"));
             updatedUser.setEmail((String) request.get("email"));
             updatedUser.setPhone((String) request.get("phone"));
-            updatedUser.setPassword((String) request.get("password")); // Only if updating password
-
+            updatedUser.setPassword((String) request.get("password")); 
             String departmentName = (String) request.get("department");
-
-            // Get the office hours field, with validation
             String officeHours = (String) request.get("officeHours");
             if (officeHours == null || officeHours.isEmpty()) {
                 throw new IllegalArgumentException("Office Hours must not be empty");
@@ -228,14 +212,18 @@ public class UserController {
             }
         } catch (IllegalArgumentException e) {
             System.err.println("Error: " + e.getMessage());
-            return ResponseEntity.status(400).body(null); // Bad Request
+            return ResponseEntity.status(400).body(null); 
         } catch (Exception e) {
             System.err.println("Error in updateFaculty: " + e.getMessage());
             e.printStackTrace();
-            return ResponseEntity.status(500).body(null); // Internal Server Error
+            return ResponseEntity.status(500).body(null);
         }
     }
-
+    
+    @GetMapping("/getallfaculties")
+    public List<Map<String, Object>> getAllPresentFaculties() {
+        return userService.getAllFacultyDetails();
+    }
     
     @DeleteMapping("/deletefaculty/{id}")
     public ResponseEntity<Map<String, String>> deleteFaculty(@PathVariable Long id) {

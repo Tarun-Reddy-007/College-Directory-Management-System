@@ -18,6 +18,4 @@ public class AdministratorProfile {
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
-
-    // Getters and Setters
 }

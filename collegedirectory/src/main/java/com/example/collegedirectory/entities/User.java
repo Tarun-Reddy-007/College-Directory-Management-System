@@ -1,5 +1,7 @@
 package com.example.collegedirectory.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -107,7 +109,9 @@ public class User {
     }
     
     @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @JsonBackReference
     private FacultyProfile facultyProfile;
+
     
 
     public String getOfficeHours() {

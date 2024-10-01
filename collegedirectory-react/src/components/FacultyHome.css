@@ -1,44 +1,42 @@
-/* src/pages/FacultyHome.css */
-
 .faculty-home-container {
     display: flex;
-    height: 100vh; /* Full height of the viewport */
-    font-family: 'Arial', sans-serif; /* Clean, modern font */
+    height: 100vh;
+    font-family: 'Arial', sans-serif;
 }
 
 .faculty-left-pane {
-    width: 20%; /* Left pane takes 20% of the width */
-    background-color: #e6f7ff; /* Light pastel blue background, similar to admin */
-    padding: 20px; /* Padding for the left pane */
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Light shadow for consistency */
+    width: 20%;
+    background-color: #e6f7ff;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
 .faculty-left-pane ul {
-    list-style-type: none; /* Remove default list styles */
-    padding: 0; /* Remove padding */
-    margin: 0; /* Remove margin */
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
 .faculty-left-pane li {
-    margin: 10px 0; /* Space between list items */
-    padding: 12px; /* Padding for list items */
-    border-radius: 8px; /* Slightly rounded corners */
-    cursor: pointer; /* Change cursor on hover */
-    background-color: #ffffff; /* White background for list items */
-    color: #333; /* Dark grey text color */
-    transition: background-color 0.3s, color 0.3s; /* Smooth background change */
+    margin: 10px 0;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #ffffff;
+    color: #333;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .faculty-left-pane li:hover {
-    background-color: #cceeff; /* Light pastel hover effect */
-    color: #004466; /* Darker text color on hover */
+    background-color: #cceeff;
+    color: #004466;
 }
 
 .faculty-left-pane button {
     margin-top: 20px;
     padding: 10px 15px;
     width: 100%;
-    background-color: #4da6ff; /* Soft blue button */
+    background-color: #4da6ff;
     color: white;
     border: none;
     border-radius: 6px;
@@ -47,33 +45,33 @@
 }
 
 .faculty-left-pane button:hover {
-    background-color: #3399ff; /* Darker blue on hover */
+    background-color: #3399ff;
 }
 
 .faculty-right-pane {
-    width: 80%; /* Right pane takes 80% of the width */
-    padding: 20px; /* Padding for the right pane */
-    background-color: #f9f9f9; /* Soft grey background */
+    width: 80%;
+    padding: 20px;
+    background-color: #f9f9f9;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Align content to the top */
-    align-items: center; /* Center content horizontally */
+    justify-content: flex-start;
+    align-items: center;
 }
 
 .faculty-right-pane h1 {
-    font-size: 2rem; /* Slightly larger font for main heading */
-    color: #004466; /* Dark blue text for the main heading */
-    margin-bottom: 20px; /* Space below the heading */
+    font-size: 2rem;
+    color: #004466;
+    margin-bottom: 20px;
 }
 
 .faculty-right-pane h3 {
-    font-size: 1.5rem; /* Subheading font size */
-    color: #666666; /* Light grey for the subheading */
+    font-size: 1.5rem;
+    color: #666666;
 }
 
 .faculty-right-pane p {
     font-size: 1rem;
-    color: #555555; /* Mid-grey text for content */
+    color: #555555;
     line-height: 1.6;
 }
 
@@ -86,30 +84,29 @@
 .faculty-right-pane table th, 
 .faculty-right-pane table td {
     padding: 12px;
-    border: 1px solid #cccccc; /* Soft grey borders */
+    border: 1px solid #cccccc;
 }
 
 .faculty-right-pane table th {
-    background-color: #e0f0ff; /* Soft blue for headers */
-    color: #004466; /* Dark blue text */
+    background-color: #e0f0ff;
+    color: #004466;
     font-weight: bold;
 }
 
 .faculty-right-pane table td {
-    background-color: #ffffff; /* White background for cells */
-    color: #333; /* Dark grey text */
+    background-color: #ffffff;
+    color: #333;
 }
 
-/* Responsive design for smaller screens */
 @media (max-width: 768px) {
     .faculty-home-container {
-        flex-direction: column; /* Stack panes vertically on small screens */
+        flex-direction: column;
     }
     .faculty-left-pane, .faculty-right-pane {
-        width: 100%; /* Make both panes full width */
-        padding: 10px; /* Reduce padding for smaller screens */
+        width: 100%;
+        padding: 10px;
     }
     .faculty-right-pane h1 {
-        font-size: 1.5rem; /* Smaller font size for small screens */
+        font-size: 1.5rem;
     }
 }

@@ -1,4 +1,3 @@
-/* General Styles */
 .faculty-student-database-container {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
@@ -15,13 +14,12 @@
     padding-left: 15px;
 }
 
-/* Course Buttons Container */
 .faculty-course-container {
     display: flex;
     justify-content: flex-start;
     align-items: center;
     gap: 10px;
-    overflow-x: auto; /* Make buttons scrollable if too many */
+    overflow-x: auto; 
     white-space: nowrap;
     padding: 10px 15px;
     background-color: #fff;
@@ -30,7 +28,6 @@
     margin-bottom: 30px;
 }
 
-/* Course Button Styling */
 .faculty-course-button {
     background-color: #007bff;
     color: white;
@@ -52,14 +49,12 @@
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-/* Error Message Styling */
 .faculty-error-message {
     color: red;
     padding-left: 15px;
     margin-bottom: 15px;
 }
 
-/* Student Details Table */
 .faculty-student-details-table-container {
     overflow-x: auto;
 }
@@ -93,7 +88,6 @@
     background-color: #e9ecef;
 }
 
-/* No Data Paragraph */
 .faculty-no-student-data {
     text-align: center;
     font-size: 18px;
@@ -101,7 +95,6 @@
     margin-top: 20px;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .faculty-course-container {
         justify-content: flex-start;

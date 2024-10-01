@@ -1,6 +1,5 @@
-// src/Login.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
+import { useNavigate } from 'react-router-dom'; 
 import './Login.css';
 
 const Login = () => {
@@ -8,8 +7,8 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('STUDENT');
     const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false); // Loading state
-    const navigate = useNavigate(); // Hook for redirection
+    const [loading, setLoading] = useState(false); 
+    const navigate = useNavigate(); 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,7 +28,6 @@ const Login = () => {
                 const data = await response.json(); 
                 localStorage.setItem('userId', data.userId); 
 
-                // Redirect based on role
                 if (role === 'STUDENT') {
                     navigate('/student-home');
                 } else if (role === 'FACULTY_MEMBER') {

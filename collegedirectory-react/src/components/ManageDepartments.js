@@ -128,7 +128,6 @@ const ManageDepartments = () => {
                 </Table>
             </TableContainer>
 
-            {/* Add Department Dialog */}
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle className="dialog-title">Add Department</DialogTitle>
                 <DialogContent className="dialog-content">
@@ -153,7 +152,6 @@ const ManageDepartments = () => {
                 </DialogActions>
             </Dialog>
 
-            {/* Update Department Dialog */}
             <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
                 <DialogTitle className="dialog-title">Update Department</DialogTitle>
                 <DialogContent className="dialog-content">

@@ -29,9 +29,8 @@ public class CourseController {
     public ResponseEntity<String> addCourse(@RequestBody Map<String, Object> courseData) {
         String title = (String) courseData.get("title");
         String description = (String) courseData.get("description");
-        Long facultyId = Long.valueOf(courseData.get("faculty").toString()); // Faculty ID received
-        String departmentName = (String) courseData.get("department"); // Department name received
-        // Call service to handle adding the course
+        Long facultyId = Long.valueOf(courseData.get("faculty").toString()); 
+        String departmentName = (String) courseData.get("department"); 
         courseService.addCourse(title, description, facultyId, departmentName);
         
         return ResponseEntity.ok("Course added successfully");
@@ -39,9 +38,8 @@ public class CourseController {
     
     @PutMapping("/updatecourse/{id}")
     public ResponseEntity<Course> updateCourse(@PathVariable Long id, @RequestBody Map<String, Object> courseData) {
-        System.out.println(courseData); // Print the incoming data to verify
-        
-        // Call the service to update the course
+        System.out.println(courseData); 
+
         Course updatedCourse = courseService.updateCourse(id, courseData);
 
         if (updatedCourse != null) {
@@ -56,9 +54,9 @@ public class CourseController {
         boolean isDeleted = courseService.deleteCourse(id);
 
         if (isDeleted) {
-            return ResponseEntity.noContent().build(); // Return 204 No Content if successfully deleted
+            return ResponseEntity.noContent().build(); 
         } else {
-            return ResponseEntity.notFound().build(); // Return 404 Not Found if the course does not exist
+            return ResponseEntity.notFound().build(); 
         }
     }
     @GetMapping("/faculty/{facultyId}")

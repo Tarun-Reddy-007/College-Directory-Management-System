@@ -1,5 +1,7 @@
 package com.example.collegedirectory.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -9,8 +11,8 @@ public class FacultyProfile {
     private Long userId;
 
     @OneToOne
-    @MapsId
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonManagedReference
     private User user;
 
     private String photo;

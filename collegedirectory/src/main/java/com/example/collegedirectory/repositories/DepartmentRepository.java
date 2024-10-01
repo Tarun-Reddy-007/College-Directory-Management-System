@@ -7,6 +7,5 @@ import com.example.collegedirectory.entities.Department;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
-    // Return a department directly, which may be null if not found
     Department findByName(String name);
 }

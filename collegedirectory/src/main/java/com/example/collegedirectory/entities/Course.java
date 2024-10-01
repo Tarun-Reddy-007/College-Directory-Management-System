@@ -12,22 +12,19 @@ public class Course {
     private String title;
     private String description;
 
-    // Association to Department
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
 
-    // Change faculty to store Long instead of FacultyProfile
-    @Column(name = "faculty_id") // Add this annotation if you want to store it in a separate column
+    @Column(name = "faculty_id")
     private Long facultyId;
 
-    @Transient // This field will not be persisted in the database
-    private String departmentName; // Temporary field to hold department name
+    @Transient 
+    private String departmentName; 
     
     @Transient
     private String facultyName; 
     
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -60,7 +57,6 @@ public class Course {
         this.department = department;
     }
 
-    // Update the setter and getter for facultyId
     public Long getFacultyId() {
         return facultyId;
     }

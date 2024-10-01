@@ -27,15 +27,13 @@ public class CourseService {
         List<Course> courses = courseRepository.findAll();
         
         for (Course course : courses) {
-            // Fetch faculty using facultyId from User entity
-            User faculty = userRepository.findById(course.getFacultyId()).orElse(null); // Handle Optional
+            User faculty = userRepository.findById(course.getFacultyId()).orElse(null); 
             if (faculty != null) {
-                course.setFacultyName(faculty.getName()); // Assuming User has getName() method
+                course.setFacultyName(faculty.getName());
             }
 
-            // Set department name from the department object
             if (course.getDepartment() != null) {
-                course.setDepartmentName(course.getDepartment().getName()); // Assuming Department has a getName() method
+                course.setDepartmentName(course.getDepartment().getName()); 
             }
         }
         
@@ -43,53 +41,46 @@ public class CourseService {
     }
 
     public Course addCourse(String title, String description, Long facultyId, String departmentName) {
-        System.out.println("Department Name Received: " + departmentName); // Debug line
+        System.out.println("Department Name Received: " + departmentName); 
 
         Department department = departmentRepository.findByName(departmentName);
         if (department == null) {
             throw new IllegalArgumentException("Department not found: " + departmentName);
         }
 
-        // Create a new Course object and set its fields
         Course course = new Course();
         course.setTitle(title);
         course.setDescription(description);
-        course.setDepartment(department); // Set the fetched department
-        course.setFacultyId(facultyId); // Directly set the facultyId
+        course.setDepartment(department); 
+        course.setFacultyId(facultyId); 
 
-        // Save the course to the database
         return courseRepository.save(course);
     }
     
     public Course updateCourse(Long id, Map<String, Object> courseData) {
-        // Retrieve the existing course
         Course existingCourse = courseRepository.findById(id).orElse(null);
 
         if (existingCourse != null) {
-            // Extract individual fields from the map
             String title = (String) courseData.get("title");
             String description = (String) courseData.get("description");
             String departmentName = (String) courseData.get("department");
             Long facultyId = Long.valueOf(courseData.get("faculty").toString());
 
-            // Fetch the department by name
             Department department = departmentRepository.findByName(departmentName);
 
             if (department == null) {
                 throw new IllegalArgumentException("Department not found with name: " + departmentName);
             }
 
-            // Update the course details
             existingCourse.setTitle(title);
             existingCourse.setDescription(description);
-            existingCourse.setDepartment(department); // Set the department entity (with its ID)
-            existingCourse.setFacultyId(facultyId); // Set the faculty ID directly
+            existingCourse.setDepartment(department); 
+            existingCourse.setFacultyId(facultyId);
 
-            // Save and return the updated course
             return courseRepository.save(existingCourse);
         }
 
-        return null; // Return null if the course doesn't exist
+        return null; 
     }
     
     public boolean deleteCourse(Long id) {
@@ -97,20 +88,19 @@ public class CourseService {
             courseRepository.deleteById(id);
             return true;
         } else {
-            return false; // Course not found
+            return false; 
         }
     }
     
     public Course findById(Long id) {
-        return courseRepository.findById(id).orElse(null); // Return null if not found
+        return courseRepository.findById(id).orElse(null); 
     }
     
     public List<Course> getCoursesByFacultyId(Long facultyId) {
         return courseRepository.findByFacultyId(facultyId);
     }
     
-    // Method to save a course
     public void save(Course course) {
-        courseRepository.save(course); // Save the course to the database
+        courseRepository.save(course); 
     }
 }

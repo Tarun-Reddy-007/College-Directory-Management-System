@@ -20,12 +20,10 @@ public class FacultyAdvisorsController {
         return isAdded ? "Faculty advisor added successfully" : "Student already has a faculty advisor"; // Return success message
     }
 
-    // Inner class to represent the request body
     public static class FacultyAdvisorRequest {
         private Long studentId;
         private Long facultyId;
 
-        // Getters and Setters
         public Long getStudentId() {
             return studentId;
         }

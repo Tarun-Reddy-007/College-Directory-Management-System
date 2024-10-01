@@ -1,61 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './FacultyStudentDatabase.css'; // Ensure this path is correct
+import './FacultyStudentDatabase.css';
 
 const FacultyStudentDatabase = () => {
     const [courses, setCourses] = useState([]);
-    const [allStudentDetails, setAllStudentDetails] = useState([]); // Store all student details
-    const [filteredStudentDetails, setFilteredStudentDetails] = useState([]); // Store filtered student details
+    const [allStudentDetails, setAllStudentDetails] = useState([]);
+    const [filteredStudentDetails, setFilteredStudentDetails] = useState([]);
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(true); 
 
     useEffect(() => {
         const userId = localStorage.getItem('userId');
-
         if (userId) {
-            // Fetch courses handled by the faculty from backend
-            axios.get(`http://localhost:8081/api/courses/faculty/${userId}`)
-                .then(response => {
-                    setCourses(response.data);
-                })
-                .catch(error => {
-                    console.error("Error fetching courses:", error);
-                });
-
-            // Automatically fetch all student details when the component mounts
+            fetchCourses(userId);
             fetchAllStudentDetails(userId);
+        } else {
+            setError('User ID not found. Please log in again.');
+            setIsLoading(false);
         }
     }, []);
 
-    // Function to fetch all student details
+    const fetchCourses = (userId) => {
+        axios.get(`http://localhost:8081/api/courses/faculty/${userId}`)
+            .then(response => {
+                setCourses(response.data);
+            })
+            .catch(error => {
+                console.error("Error fetching courses:", error);
+                setError("Error fetching courses.");
+            })
+            .finally(() => setIsLoading(false)); 
+    };
+
     const fetchAllStudentDetails = (userId) => {
         axios.get(`http://localhost:8081/api/student/faculty/${userId}`)
             .then(response => {
-                setAllStudentDetails(response.data); // Set all student details
-                setFilteredStudentDetails(response.data); // Initialize filtered student details with all details
+                setAllStudentDetails(response.data);
+                setFilteredStudentDetails(response.data);
             })
             .catch(error => {
                 console.error("Error fetching student details:", error);
                 setError("Error fetching student details.");
-            });
+            })
+            .finally(() => setIsLoading(false));
     };
 
     const handleCourseClick = (courseId) => {
-        // Fetch enrolled student IDs directly for the selected course
+        setIsLoading(true); 
         axios.get(`http://localhost:8081/api/enrollments/enrolled-courses?courseId=${courseId}`)
             .then(response => {
-                const enrolledStudentIds = response.data; // Assuming this contains the list of student IDs
-                console.log(enrolledStudentIds); // For debugging
-
-                // Filter student details based on the common student IDs
+                const enrolledStudentIDs = response.data;
                 const commonStudentDetails = allStudentDetails.filter(student => 
-                    enrolledStudentIds.includes(student[0]) // Assuming student[0] is the student ID
+                    enrolledStudentIDs.includes(student[0])
                 );
-                setFilteredStudentDetails(commonStudentDetails); // Set the filtered student details
+                setFilteredStudentDetails(commonStudentDetails);
             })
             .catch(error => {
                 console.error("Error fetching enrolled student details:", error);
                 setError("Error fetching enrolled student details.");
-            });
+            })
+            .finally(() => setIsLoading(false));
     };
 
     return (
@@ -64,16 +68,18 @@ const FacultyStudentDatabase = () => {
             <div className="faculty-course-container">
                 <button 
                     className="faculty-course-button" 
-                    onClick={() => setFilteredStudentDetails(allStudentDetails)} // Show all students when "All" is clicked
+                    onClick={() => setFilteredStudentDetails(allStudentDetails)}
                 >
                     All
                 </button>
-                {courses.length > 0 ? (
+                {isLoading ? (
+                    <p className="faculty-loading">Loading courses...</p>
+                ) : courses.length > 0 ? (
                     courses.map((course) => (
                         <button 
                             key={course.id} 
                             className="faculty-course-button"
-                            onClick={() => handleCourseClick(course.id)} // Fetch students for specific course
+                            onClick={() => handleCourseClick(course.id)}
                         >
                             {course.title}
                         </button>
@@ -85,7 +91,9 @@ const FacultyStudentDatabase = () => {
     
             <h2>Student Details</h2>
             {error && <p className="faculty-error-message">{error}</p>}
-            {filteredStudentDetails.length > 0 ? (
+            {isLoading ? (
+                <p className="faculty-loading">Loading student details...</p>
+            ) : filteredStudentDetails.length > 0 ? (
                 <div className="faculty-student-details-table-container">
                     <table className="faculty-student-details-table">
                         <thead>
@@ -100,11 +108,11 @@ const FacultyStudentDatabase = () => {
                         <tbody>
                             {filteredStudentDetails.map((student, index) => (
                                 <tr key={index}>
-                                    <td>{student[0]}</td> {/* Adjust index based on your data structure */}
+                                    <td>{student[0]}</td>
                                     <td>{student[1]}</td>
                                     <td>{student[2]}</td>
                                     <td>{student[3]}</td>
-                                    <td>{student[4]}</td> {/* Adjust index based on your data structure */}
+                                    <td>{student[4]}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -115,7 +123,6 @@ const FacultyStudentDatabase = () => {
             )}
         </div>
     );
-    
 };
 
 export default FacultyStudentDatabase;

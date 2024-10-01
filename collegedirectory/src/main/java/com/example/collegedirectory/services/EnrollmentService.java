@@ -33,17 +33,14 @@ public class EnrollmentService {
     }
     
     public List<Long> getStudentIdsByCourseId(Long courseId) {
-        // Fetch the enrollments for the provided courseId
         List<Enrollment> enrollments = enrollmentRepository.findByCourseId(courseId);
-        // List to hold student IDs
         List<Long> studentIds = new ArrayList<>();
 
-        // Use a for-each loop to extract student IDs
         for (Enrollment enrollment : enrollments) {
-            if (enrollment.getStudent() != null) {  // Ensure student is not null
-                studentIds.add(enrollment.getStudent().getUserId()); // Add student ID to the list
+            if (enrollment.getStudent() != null) { 
+                studentIds.add(enrollment.getStudent().getUserId()); 
             }
         }
-        return studentIds; // Return the list of student IDs
+        return studentIds;
     }
 }

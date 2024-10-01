@@ -19,9 +19,9 @@ import {
     TableHead,
     TableRow,
     Paper,
-    Autocomplete, // Import Autocomplete
+    Autocomplete, 
 } from '@mui/material';
-import './ManageStudents.css'; // Import your CSS file
+import './ManageStudents.css'; 
 
 const ManageStudent = () => {
     const [open, setOpen] = useState(false);
@@ -29,8 +29,8 @@ const ManageStudent = () => {
     const [deleteOpen, setDeleteOpen] = useState(false);
     const [deleteFacultyAdvisorOpen, setDeleteFacultyAdvisorOpen] = useState(false);
     const [enrollOpen, setEnrollOpen] = useState(false); 
-    const [AddFacultyAdvisorOpen, setAddFacultyAdvisorOpen] = useState(false);// State for enrollment dialog
-    const [enrollDeleteOpen, setEnrollDeleteOpen] = useState(false); // State for enrollment dialog
+    const [AddFacultyAdvisorOpen, setAddFacultyAdvisorOpen] = useState(false);
+    const [enrollDeleteOpen, setEnrollDeleteOpen] = useState(false); 
     const [formData, setFormData] = useState({
         name: '',
         username: '',
@@ -42,11 +42,11 @@ const ManageStudent = () => {
     });
     const [students, setStudents] = useState([]);
     const [faculties, setFaculties] = useState([]);
-    const [courses, setCourses] = useState([]); // State to hold courses
+    const [courses, setCourses] = useState([]);
     const [studentcourses, setStudentCourses] = useState([]);
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [selectedCourse, setSelectedCourse] = useState(null);
-    const [selectedfacultyAdvisor, setSelectedFacultyAdvisor] = useState(null); // State to hold selected course
+    const [selectedfacultyAdvisor, setSelectedFacultyAdvisor] = useState(null);
     const [errors, setErrors] = useState({});
     const userId = localStorage.getItem('userId');
 
@@ -62,17 +62,20 @@ const ManageStudent = () => {
             console.error('Error fetching students:', error);
         }
     };
+    const handleFacultyChange = (selectedOption) => {
+        setSelectedFacultyAdvisor(selectedOption);
+    };
 
     const fetchFaculties = async () => {
         try {
-            const response = await axios.get('http://localhost:8081/api/faculties/getallfaculties');
-            if (Array.isArray(response.data)) {
-                setFaculties(response.data);
-            } else {
-                console.error('Data is not an array:', response.data);
-            }
+            const response = await axios.get('http://localhost:8081/api/users/getallfaculties');
+            const facultyOptions = response.data.map(faculty => ({
+                value: faculty.id,  
+                label: `${faculty.name} (${faculty.departmentName}, Phone: ${faculty.phone})`, // Display name, department, and phone
+            }));
+            setFaculties(facultyOptions);
         } catch (error) {
-            console.error('Error fetching students:', error);
+            console.error('Error fetching faculty:', error);
         }
     };
 
@@ -89,14 +92,13 @@ const ManageStudent = () => {
                 }
             });
             alert("Enrollment deleted successfully.");
-            setEnrollDeleteOpen(false); // Close the dialog after deletion
+            setEnrollDeleteOpen(false); 
         } catch (error) {
             console.error("Error deleting enrollment:", error);
             alert("Failed to delete enrollment.");
         }
     };
     
-    // Fetch courses
     const fetchCourses = async () => {
         try {
             const response = await axios.get('http://localhost:8081/api/courses/getallcourses'); // Update the endpoint to match your API
@@ -199,49 +201,44 @@ const ManageStudent = () => {
     };
 
     const handleEnroll = async () => {
-        if (!selectedCourse || !selectedStudent) return; // Ensure both course and student are selected
+        if (!selectedCourse || !selectedStudent) return; 
         try {
             const enrollmentData = {
-                student: { userId: selectedStudent.id }, // Set student reference
-                course: { id: selectedCourse.id },   // Set course reference
+                student: { userId: selectedStudent.id }, 
+                course: { id: selectedCourse.id },  
             };
     
             await axios.post(`http://localhost:8081/api/enrollments/enroll`, enrollmentData);
             setEnrollOpen(false);
-            fetchStudents(); // Refresh students after enrollment
+            fetchStudents(); 
         } catch (error) {
             console.error('Error enrolling student:', error);
         }
     };
 
     const addFacultyAdvisor = async () => {
-        if (!selectedfacultyAdvisor || !selectedStudent) return; // Ensure both student and faculty are selected
+        if (!selectedfacultyAdvisor || !selectedStudent) return; 
     
         try {
-            // Create the data object to send in the request body
             const facultyAdvisorData = {
                 studentId: selectedStudent.id,
-                facultyId: selectedfacultyAdvisor.facultyId
+                facultyId: selectedfacultyAdvisor.value 
             };
             
-            // Send the data as JSON in the request body
             const response = await axios.post(`http://localhost:8081/api/facultyAdvisors/addfacultyadvisor`, facultyAdvisorData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
             
-            // Check the response message
             if (response.data === "Faculty advisor added successfully") {
-                // Close the dialog box and refresh students
                 setAddFacultyAdvisorOpen(false);
-                fetchStudents(); // Refresh students after enrollment
+                fetchStudents(); 
             } else {
-                // Handle case where student already has a faculty advisor
-                alert(response.data); // Display the message (or handle as needed)
+                alert(response.data); 
             }
         } catch (error) {
-            console.error('Error enrolling student:', error);
+            console.error('Error adding faculty advisor:', error);
         }
     };
     
@@ -281,7 +278,6 @@ const ManageStudent = () => {
             <h2 className="manage-student-header">Manage Students</h2>
             <div className="manage-student-filters">
                 <div className="filter-buttons">
-                    {/* Filtering logic... */}
                 </div>
 
                 <Button variant="contained" color="primary" onClick={handleClickOpen}>
@@ -289,7 +285,6 @@ const ManageStudent = () => {
                 </Button>
             </div>
 
-            {/* Student Table */}
             <TableContainer component={Paper} className="table-container">
                 <Table className="table">
                     <TableHead>
@@ -362,7 +357,6 @@ const ManageStudent = () => {
                 </Table>
             </TableContainer>
 
-            {/* Add Student Dialog */}
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Add Student</DialogTitle>
                 <DialogContent>
@@ -450,12 +444,10 @@ const ManageStudent = () => {
                 </DialogContent>
             </Dialog>
 
-            {/* Update Student Dialog */}
             <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
                 <DialogTitle>Update Student</DialogTitle>
                 <DialogContent>
                     <form onSubmit={handleUpdate}>
-                        {/* Fields for updating student */}
                         <TextField
                             margin="dense"
                             label="Name"
@@ -530,7 +522,6 @@ const ManageStudent = () => {
                 </DialogContent>
             </Dialog>
 
-            {/* Delete Confirmation Dialog */}
             <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
                 <DialogTitle>Confirm Deletion</DialogTitle>
                 <DialogContent>
@@ -546,7 +537,6 @@ const ManageStudent = () => {
                 </DialogActions>
             </Dialog>
 
-            {/* Enroll to Course Dialog */}
             <Dialog open={enrollOpen} onClose={() => setEnrollOpen(false)}>
                 <DialogTitle>Enroll to Course</DialogTitle>
                 <DialogContent>
@@ -590,22 +580,24 @@ const ManageStudent = () => {
             <Dialog open={AddFacultyAdvisorOpen} onClose={() => setAddFacultyAdvisorOpen(false)}>
                 <DialogTitle>Add Faculty Advisor</DialogTitle>
                 <DialogContent>
-                    <Typography>Select a Faculty Advisor {selectedStudent?.name}:</Typography>
+                    <Typography>Select a Faculty Advisor for {selectedStudent?.name}:</Typography>
                     <Autocomplete
                         options={faculties}
-                        getOptionLabel={(option) => `${option.facultyId} ${option.facultyName} ${option.phone} ${option.email} ${option.departmentName}`} // Combine title, departmentName, and facultyName
-                        onChange={(event, value) => setSelectedFacultyAdvisor(value)} // Set selected course
-                        renderInput={(params) => <TextField {...params} label="FacultyAdvisor" variant="outlined" fullWidth />}
+                        getOptionLabel={(option) => option.label} // Use the label for display
+                        onChange={(event, newValue) => {
+                            setSelectedFacultyAdvisor(newValue); // Update state with selected faculty
+                        }}
+                        renderInput={(params) => <TextField {...params} label="Select Faculty" margin="dense" variant="outlined" />}
                     />
                 </DialogContent>
                 <DialogActions>
-                <Button onClick={() => setAddFacultyAdvisorOpen(false)} color="primary">
-                    Cancel
-                </Button>
-                <Button onClick={addFacultyAdvisor} color="primary">
-                    Add Faculty Advisor
-                </Button>
-            </DialogActions>
+                    <Button onClick={() => setAddFacultyAdvisorOpen(false)} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={addFacultyAdvisor} color="primary" disabled={!selectedfacultyAdvisor}>
+                        Add Faculty Advisor
+                    </Button>
+                </DialogActions>
             </Dialog>
             <Dialog open={deleteFacultyAdvisorOpen} onClose={() => setDeleteFacultyAdvisorOpen(false)}>
                 <DialogTitle>Confirm Deletion</DialogTitle>

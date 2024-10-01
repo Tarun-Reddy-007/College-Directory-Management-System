@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Select from 'react-select'; // Import react-select
+import Select from 'react-select'; 
 import {
     Button,
     Dialog,
@@ -21,7 +21,7 @@ import {
     TableRow,
     Paper,
 } from '@mui/material';
-import './ManageCourses.css'; // Import your CSS file
+import './ManageCourses.css'; 
 
 const ManageCourses = () => {
     const [open, setOpen] = useState(false);
@@ -30,7 +30,7 @@ const ManageCourses = () => {
     const [formData, setFormData] = useState({
         title: '',
         description: '',
-        department: '', // This will now store the department name
+        department: '', 
         faculty: ''
     });
     const [courses, setCourses] = useState([]);
@@ -38,7 +38,6 @@ const ManageCourses = () => {
     const [faculties, setFaculties] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState(null);
 
-    // Fetch courses from the server
     const fetchCourses = async () => {
         try {
             const response = await axios.get('http://localhost:8081/api/courses/getallcourses');
@@ -48,7 +47,6 @@ const ManageCourses = () => {
         }
     };
 
-    // Fetch departments from the server
     const fetchDepartments = async () => {
         try {
             const response = await axios.get('http://localhost:8081/api/departments');
@@ -58,13 +56,18 @@ const ManageCourses = () => {
         }
     };
 
-    // Fetch faculties from the server for Autocomplete
     const fetchFaculties = async () => {
         try {
             const response = await axios.get('http://localhost:8081/api/users/getallfaculties');
-            setFaculties(response.data);
+            const facultyOptions = response.data.map(faculty => ({
+                value: faculty.id, 
+                label: `${faculty.name} (${faculty.departmentName}, Phone: ${faculty.phone})`, // Display name, department, and phone
+                departmentName: faculty.departmentName,
+                phone: faculty.phone,
+            }));
+            setFaculties(facultyOptions); 
         } catch (error) {
-            console.error('Error fetching faculties:', error);
+            console.error('Error fetching faculty:', error);
         }
     };
 
@@ -83,7 +86,7 @@ const ManageCourses = () => {
         setFormData({
             title: '',
             description: '',
-            department: '', // Reset to empty string
+            department: '', 
             faculty: ''
         });
     };
@@ -97,32 +100,40 @@ const ManageCourses = () => {
     };
 
     const handleFacultyChange = (selectedOption) => {
-        setFormData((prevFormData) => ({
-            ...prevFormData,
-            faculty: selectedOption ? selectedOption.value : '', // Use 'value' for the ID
-        }));
+        if (selectedOption) {
+            setFormData(prevData => ({
+                ...prevData,
+                faculty: selectedOption.value, 
+            }));
+        } else {
+            setFormData(prevData => ({
+                ...prevData,
+                faculty: null,
+            }));
+        }
     };
+    
 
     const handleDepartmentChange = (selectedOption) => {
         setFormData((prevFormData) => ({
             ...prevFormData,
-            department: selectedOption ? selectedOption.label : '', // Set department name
+            department: selectedOption ? selectedOption.label : '', 
         }));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Submitting form data:', formData); // Log the data being submitted
+        console.log('Submitting form data:', formData); 
         try {
             const dataToSend = {
                 title: formData.title,
                 description: formData.description,
-                faculty: formData.faculty, // Faculty ID
-                department: formData.department // Use the retrieved department ID
+                faculty: formData.faculty, 
+                department: formData.department 
             };
     
             const response = await axios.post('http://localhost:8081/api/courses/addcourse', dataToSend);
-            console.log('Response:', response.data); // Log the response
+            console.log('Response:', response.data);
             handleClose();
             fetchCourses();
         } catch (error) {
@@ -137,22 +148,22 @@ const ManageCourses = () => {
     };
 
     const handleUpdate = async (e) => {
-        e.preventDefault(); // Prevent the default form submission
-        console.log('Form Data before update submission:', formData); // Log the form data
+        e.preventDefault(); 
+        console.log('Form Data before update submission:', formData); 
     
         try {
             const dataToUpdate = {
                 title: formData.title,
                 description: formData.description,
-                faculty: formData.faculty, // Faculty ID
-                department: formData.department, // Department name (ensure this matches your API structure)
+                faculty: formData.faculty, 
+                department: formData.department, 
             };
     
             console.log('Data being sent to the update API:', dataToUpdate); // Log the data being sent
     
             await axios.put(`http://localhost:8081/api/courses/updatecourse/${selectedCourse.id}`, dataToUpdate);
             setUpdateOpen(false);
-            fetchCourses(); // Fetch the updated courses after a successful update
+            fetchCourses(); 
         } catch (error) {
             console.error('Error updating course:', error);
         }
@@ -188,7 +199,7 @@ const ManageCourses = () => {
                 <Table className="table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>Course ID</TableCell>
+                            <TableCell>Course ID </TableCell>
                             <TableCell>Title</TableCell>
                             <TableCell>Description</TableCell>
                             <TableCell>Department</TableCell>
@@ -226,7 +237,6 @@ const ManageCourses = () => {
                 </Table>
             </TableContainer>
 
-            {/* Add Course Dialog */}
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Add Course</DialogTitle>
                 <DialogContent>
@@ -263,20 +273,15 @@ const ManageCourses = () => {
                             </MuiSelect>
                         </FormControl>
 
-                        {/* Faculty Autocomplete using react-select */}
                         <FormControl fullWidth margin="dense">
                             <Select
-                                options={faculties.map(faculty => ({
-                                    value: faculty.id,
-                                    label: faculty.name
-                                }))}
+                                options={faculties}  
                                 onChange={handleFacultyChange}
                                 placeholder="Select Faculty"
                                 isClearable
                             />
                         </FormControl>
 
-                        {/* Move DialogActions inside the form */}
                         <DialogActions>
                             <Button onClick={handleClose} color="secondary">Cancel</Button>
                             <Button type="submit" color="primary">Add Course</Button>
@@ -285,7 +290,6 @@ const ManageCourses = () => {
                 </DialogContent>
             </Dialog>
 
-            {/* Update Course Dialog */}
             <Dialog open={updateOpen} onClose={() => setUpdateOpen(false)}>
             <DialogTitle>Update Course</DialogTitle>
             <DialogContent>
@@ -310,7 +314,7 @@ const ManageCourses = () => {
                         <InputLabel>Department</InputLabel>
                         <MuiSelect
                             name="department"
-                            value={formData.department} // Update to reflect the department name
+                            value={formData.department}
                             onChange={handleChange}
                             label="Department"
                         >
@@ -322,20 +326,14 @@ const ManageCourses = () => {
                         </MuiSelect>
                     </FormControl>
 
-                    {/* Faculty Autocomplete for update */}
                     <FormControl fullWidth margin="dense">
-                        <Select
-                            options={faculties.map(faculty => ({
-                                value: faculty.id,
-                                label: faculty.name
-                            }))}
-                            onChange={handleFacultyChange}
-                            value={faculties.find(faculty => faculty.id === formData.faculty) || null}
-                            placeholder="Select Faculty"
-                            isClearable
-                        />
-                    </FormControl>
-
+                            <Select
+                                options={faculties}  
+                                onChange={handleFacultyChange}
+                                placeholder="Select Faculty"
+                                isClearable
+                            />
+                        </FormControl>
                     <DialogActions>
                         <Button onClick={() => setUpdateOpen(false)} color="secondary">Cancel</Button>
                         <Button type="submit" color="primary">Update Course</Button>
@@ -344,7 +342,6 @@ const ManageCourses = () => {
             </DialogContent>
         </Dialog>
 
-            {/* Delete Confirmation Dialog */}
             <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
                 <DialogTitle>Delete Course</DialogTitle>
                 <DialogContent>

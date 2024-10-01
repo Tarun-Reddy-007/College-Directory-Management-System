@@ -30,277 +30,176 @@ const Graphs = () => {
     const [enrollmentTrends, setEnrollmentTrends] = useState({});
     const [facultyCourseLoads, setFacultyCourseLoads] = useState({});
     const [studentsPerDepartment, setStudentsPerDepartment] = useState({});
+    const [facultyAdvisorWorkload, setFacultyAdvisorWorkload] = useState({});
+    const [ratioData, setRatioData] = useState({ labels: ['Student-Faculty Ratio'], datasets: [] });
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
-    // Fetch data from the backend
+    const fetchData = async () => {
+        try {
+            const [studentCountRes, enrollmentTrendsRes, facultyCourseLoadsRes, studentsPerDeptRes, facultyAdvisorWorkloadRes, ratioRes] = await Promise.all([
+                fetch('http://localhost:8081/api/graphs/students-count-by-year'),
+                fetch('http://localhost:8081/api/graphs/enrollment-trends'),
+                fetch('http://localhost:8081/api/graphs/faculty-course-loads'),
+                fetch('http://localhost:8081/api/graphs/students-per-department'),
+                fetch('http://localhost:8081/api/graphs/faculty-advisor-workload'),
+                fetch('http://localhost:8081/api/graphs/students-to-faculty')
+            ]);
+
+            const studentCountData = await studentCountRes.json();
+            const enrollmentTrendsData = await enrollmentTrendsRes.json();
+            const facultyCourseLoadsData = await facultyCourseLoadsRes.json();
+            const studentsPerDeptData = await studentsPerDeptRes.json();
+            const facultyAdvisorWorkloadData = await facultyAdvisorWorkloadRes.json();
+            const ratio = await ratioRes.json();
+
+            // Prepare data for the charts
+            setStudentCountByYear({
+                labels: Object.keys(studentCountData),
+                datasets: [{
+                    label: 'Number of Students',
+                    data: Object.values(studentCountData),
+                    backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                }]
+            });
+
+            setEnrollmentTrends({
+                labels: Object.keys(enrollmentTrendsData),
+                datasets: [{
+                    label: 'Enrollments per Year',
+                    data: Object.values(enrollmentTrendsData),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                }]
+            });
+
+            setFacultyCourseLoads({
+                labels: Object.keys(facultyCourseLoadsData),
+                datasets: [{
+                    label: 'Courses Taught by Faculty',
+                    data: Object.values(facultyCourseLoadsData),
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                    borderColor: 'rgba(153, 102, 255, 1)',
+                    borderWidth: 1,
+                }]
+            });
+
+            setStudentsPerDepartment({
+                labels: Object.keys(studentsPerDeptData),
+                datasets: [{
+                    label: 'Number of Students',
+                    data: Object.values(studentsPerDeptData),
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1,
+                }]
+            });
+
+            setFacultyAdvisorWorkload({
+                labels: facultyAdvisorWorkloadData.map(entry => entry.facultyName),
+                datasets: [{
+                    label: 'Students Advised',
+                    data: facultyAdvisorWorkloadData.map(entry => entry.studentCount),
+                    backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                    borderColor: 'rgba(255, 159, 64, 1)',
+                    borderWidth: 1,
+                }]
+            });
+
+            setRatioData({
+                labels: ['Student-Faculty Ratio'],
+                datasets: [{
+                    label: 'Ratio',
+                    data: [ratio],
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                }]
+            });
+
+        } catch (err) {
+            setError('Error fetching data: ' + err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        // Fetch student count by year
-        fetch('http://localhost:8081/api/students-count-by-year')
-            .then(response => response.json())
-            .then(data => {
-                // Check for error in response
-                if (data.error) {
-                    console.error('Error fetching student count:', data.error);
-                    return;
-                }
-                // Prepare data for the bar chart
-                setStudentCountByYear({
-                    labels: Object.keys(data), // Years
-                    datasets: [{
-                        label: 'Number of Students',
-                        data: Object.values(data), // Student counts
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                    }]
-                });
-            })
-            .catch(error => console.error('Error fetching student count:', error));
-
-        // Fetch enrollment trends
-        fetch('http://localhost:8081/api/graphs/enrollment-trends')
-            .then(response => response.json())
-            .then(data => {
-                setEnrollmentTrends({
-                    labels: Object.keys(data), // Years
-                    datasets: [{
-                        label: 'Enrollments per Year',
-                        data: Object.values(data), // Enrollment counts
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                    }]
-                });
-            })
-            .catch(error => console.error('Error fetching enrollment trends:', error));
-
-        // Fetch faculty course loads
-        fetch('http://localhost:8081/api/graphs/faculty-course-loads')
-            .then(response => response.json())
-            .then(data => {
-                setFacultyCourseLoads({
-                    labels: Object.keys(data), // Faculty Names
-                    datasets: [{
-                        label: 'Courses Taught by Faculty',
-                        data: Object.values(data), // Course load per faculty
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        borderWidth: 1,
-                    }]
-                });
-            })
-            .catch(error => console.error('Error fetching faculty course loads:', error));
-
-        // Fetch students per department
-        fetch('http://localhost:8081/api/graphs/students-per-department')
-            .then(response => response.json())
-            .then(data => {
-                setStudentsPerDepartment({
-                    labels: Object.keys(data), // Department names
-                    datasets: [{
-                        label: 'Number of Students',
-                        data: Object.values(data), // Student counts
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1,
-                    }]
-                });
-            })
-            .catch(error => console.error('Error fetching students per department:', error));
-
-            fetch('http://localhost:8081/api/graphs/students-count-by-year')
-            .then(response => response.json())
-            .then(data => {
-                // Check for error in response
-                if (data.error) {
-                    console.error('Error fetching student count:', data.error);
-                    return;
-                }
-                // Prepare data for the bar chart
-                setStudentCountByYear({
-                    labels: Object.keys(data), // Years
-                    datasets: [{
-                        label: 'Number of Students',
-                        data: Object.values(data), // Student counts
-                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                    }]
-                });
-            })
-            .catch(error => console.error('Error fetching student count:', error));
+        fetchData();
     }, []);
+
+    const chartOptions = (title, xLabel, yLabel) => ({
+        responsive: true,
+        maintainAspectRatio: false, // Allow the chart to grow based on its container
+        scales: {
+            x: {
+                title: {
+                    display: true,
+                    text: xLabel,
+                    font: {
+                        size: 12,
+                        weight: 'bold',
+                    },
+                },
+            },
+            y: {
+                title: {
+                    display: true,
+                    text: yLabel,
+                    font: {
+                        size: 12,
+                        weight: 'bold',
+                    },
+                },
+                beginAtZero: true,
+                ticks: {
+                    precision: 0,
+                },
+            },
+        },
+        plugins: {
+            legend: { position: 'top' },
+            title: { display: true, text: title },
+        },
+    });
+    
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>{error}</p>;
 
     return (
         <div className="graphs-container">
-            {/* Bar Chart: Number of Students by Year */}
-
-            {/* Row 1: Enrollment Trends and Faculty Course Loads */}
             <div className="chart">
                 <h3>Enrollment Trends</h3>
-                {enrollmentTrends && enrollmentTrends.labels ? (
-                    <Line
-                        data={enrollmentTrends}
-                        options={{
-                            responsive: true,
-                            scales: {
-                                x: {
-                                    title: {
-                                        display: true,
-                                        text: 'Year',
-                                        font: {
-                                            size: 12,
-                                            weight: 'bold',
-                                        },
-                                    },
-                                },
-                                y: {
-                                    title: {
-                                        display: true,
-                                        text: 'Number of Enrollments',
-                                        font: {
-                                            size: 12,
-                                            weight: 'bold',
-                                        },
-                                    },
-                                    beginAtZero: true, // Start Y-axis at 0
-                                    ticks: {
-                                        precision: 0, // Show whole numbers
-                                    },
-                                },
-                            },
-                            plugins: {
-                                legend: { position: 'top' },
-                                title: { display: true, text: 'Enrollments per Year' },
-                            },
-                        }}
-                    />
-                ) : <p>Loading...</p>}
+                <Line data={enrollmentTrends} options={chartOptions('Enrollments per Year', 'Year', 'Number of Enrollments')} />
             </div>
-    
+
             <div className="chart">
                 <h3>Faculty Course Loads</h3>
-                {facultyCourseLoads && facultyCourseLoads.labels ? (
-                    <Bar
-                        data={facultyCourseLoads}
-                        options={{
-                            responsive: true,
-                            scales: {
-                                x: {
-                                    title: {
-                                        display: true,
-                                        text: 'Faculty',
-                                        font: {
-                                            size: 12,
-                                            weight: 'bold',
-                                        },
-                                    },
-                                },
-                                y: {
-                                    title: {
-                                        display: true,
-                                        text: 'Courses Taught',
-                                        font: {
-                                            size: 12,
-                                            weight: 'bold',
-                                        },
-                                    },
-                                    beginAtZero: true, // Start Y-axis at 0
-                                    ticks: {
-                                        precision: 0, // Show whole numbers
-                                    },
-                                },
-                            },
-                            plugins: {
-                                legend: { position: 'top' },
-                                title: { display: true, text: 'Courses Taught by Faculty' },
-                            },
-                        }}
-                    />
-                ) : <p>Loading...</p>}
+                <Bar data={facultyCourseLoads} options={chartOptions('Courses Taught by Faculty', 'Faculty', 'Courses Taught')} />
             </div>
-    
-            {/* Row 2: Students per Department */}
+
             <div className="chart" style={{ flex: '1 1 100%' }}>
                 <h3>Students per Department</h3>
-                {studentsPerDepartment && studentsPerDepartment.labels ? (
-                    <Bar
-                        data={studentsPerDepartment}
-                        options={{
-                            responsive: true,
-                            scales: {
-                                x: {
-                                    title: {
-                                        display: true,
-                                        text: 'Department',
-                                        font: {
-                                            size: 12,
-                                            weight: 'bold',
-                                        },
-                                    },
-                                },
-                                y: {
-                                    title: {
-                                        display: true,
-                                        text: 'Number of Students',
-                                        font: {
-                                            size: 12,
-                                            weight: 'bold',
-                                        },
-                                    },
-                                    beginAtZero: true, // Start Y-axis at 0
-                                    ticks: {
-                                        precision: 0, // Show whole numbers
-                                    },
-                                },
-                            },
-                            plugins: {
-                                legend: { position: 'top' },
-                                title: { display: true, text: 'Number of Students in Each Department' },
-                            },
-                        }}
-                    />
-                ) : <p>Loading...</p>}
+                <Bar data={studentsPerDepartment} options={chartOptions('Number of Students in Each Department', 'Department', 'Number of Students')} />
             </div>
+
             <div className="chart">
-                <h3>Number of Students by Year</h3>
-                {studentCountByYear && studentCountByYear.labels ? (
-                    <Bar
-                        data={studentCountByYear}
-                        options={{
-                            responsive: true,
-                            scales: {
-                                x: {
-                                    title: {
-                                        display: true,
-                                        text: 'Year',
-                                        font: {
-                                            size: 12,
-                                            weight: 'bold',
-                                        },
-                                    },
-                                },
-                                y: {
-                                    title: {
-                                        display: true,
-                                        text: 'Number of Students',
-                                        font: {
-                                            size: 12,
-                                            weight: 'bold',
-                                        },
-                                    },
-                                    beginAtZero: true, // Start Y-axis at 0
-                                    ticks: {
-                                        precision: 0, // Show whole numbers
-                                    },
-                                },
-                            },
-                            plugins: {
-                                legend: { position: 'top' },
-                                title: { display: true, text: 'Students Count by Year' },
-                            },
-                        }}
-                    />
-                ) : <p>Loading...</p>}
+                <h3> Students by Year</h3>
+                <Bar data={studentCountByYear} options={chartOptions('Students Count by Year', 'Year', 'Number of Students')} />
+            </div>
+
+            <div className="chart">
+                <h3>Faculty Advisor Workload</h3>
+                <Bar data={facultyAdvisorWorkload} options={chartOptions('Students Advised by Faculty', 'Faculty', 'Number of Students')} />
+            </div>
+
+            <div className="chart">
+                <h3>Student-Faculty Ratio</h3>
+                <Bar data={ratioData} options={chartOptions('Student to Faculty Ratio', 'Ratio', 'Count')} />
             </div>
         </div>
     );

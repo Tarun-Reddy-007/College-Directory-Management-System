@@ -10,18 +10,18 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000") // Allow requests from the React app
+@CrossOrigin(origins = "http://localhost:3000") 
 public class DepartmentController {
 
     @Autowired
     private DepartmentService departmentService;
 
-    @GetMapping("/departments") // Specify the correct endpoint
+    @GetMapping("/departments") 
     public List<Department> getAllDepartments() {
         return departmentService.getAllDepartments();
     }
 
-    @PostMapping("/adddepartment") // Specify the correct endpoint
+    @PostMapping("/adddepartment") 
     public Department createDepartment(@RequestBody Department department) {
         return departmentService.saveDepartment(department);
     }

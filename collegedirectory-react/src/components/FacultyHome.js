@@ -1,9 +1,8 @@
-// src/pages/FacultyHome.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
-import FacultyProfile from '../components/FacultyProfile'; // Adjust the import path as necessary
-import FacultyStudentDatabase from '../components/FacultyStudentDatabase'; // Adjust the import path as necessary
-import './FacultyHome.css'; // Import the CSS file
+import FacultyProfile from '../components/FacultyProfile'; 
+import FacultyStudentDatabase from '../components/FacultyStudentDatabase'; 
+import './FacultyHome.css'; 
 
 const FacultyHome = () => {
     const [selectedMenu, setSelectedMenu] = useState('facultyprofile'); 
@@ -12,22 +11,21 @@ const FacultyHome = () => {
     const renderContent = () => {
         switch (selectedMenu) {
             case 'facultyprofile':
-                return <FacultyProfile />; // Render the Faculty Profile component
+                return <FacultyProfile />;
             case 'studentdatabase':
-                return <FacultyStudentDatabase />; // Render the Student Database component
+                return <FacultyStudentDatabase />;
             default:
-                return <FacultyProfile />; // Default to the Faculty Profile
+                return <FacultyProfile />;
         } 
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('userId'); // Clear user ID on logout
-        navigate('/'); // Redirect to the login page
+        localStorage.removeItem('userId');
+        navigate('/');
     };
 
     return (
         <div className="faculty-home-container">
-            {/* Left Pane */}
             <div className="faculty-left-pane">
                 <ul>
                     <li onClick={() => setSelectedMenu('facultyprofile')}>Profile</li>
@@ -35,8 +33,6 @@ const FacultyHome = () => {
                 </ul>
                 <button onClick={handleLogout}>Logout</button>
             </div>
-
-            {/* Right Pane */}
             <div className="faculty-right-pane">
                 <h1>College Directory Management System</h1>
                 {renderContent()}

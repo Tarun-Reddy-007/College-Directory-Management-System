@@ -32,8 +32,8 @@ const ManageFaculty = () => {
         email: '',
         phone: '',
         password: '',
-        department: '', // Add department field
-        officeHours: '' // Add office hours field
+        department: '',
+        officeHours: '' 
     });
     const [faculty, setFaculty] = useState([]);
     const [selectedFaculty, setSelectedFaculty] = useState(null);
@@ -43,7 +43,7 @@ const ManageFaculty = () => {
     const fetchFaculty = async () => {
         try {
             const response = await axios.get('http://localhost:8081/api/users/getallfaculties');
-            console.log(response);
+            console.log(response.data);
             if (Array.isArray(response.data)) {
                 setFaculty(response.data);
             } else {
@@ -160,7 +160,7 @@ const ManageFaculty = () => {
                                 <TableCell>{faculty.username}</TableCell>
                                 <TableCell>{faculty.email}</TableCell>
                                 <TableCell>{faculty.phone}</TableCell>
-                                <TableCell>{faculty.department}</TableCell> {/* Access department directly */}
+                                <TableCell>{faculty.departmentName}</TableCell> {/* Access department directly */}
                                 <TableCell>{faculty.officeHours}</TableCell> {/* Access office hours directly */}
                                 <TableCell>
                                     <Button

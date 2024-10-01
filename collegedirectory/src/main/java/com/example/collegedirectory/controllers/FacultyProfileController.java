@@ -16,8 +16,4 @@ public class FacultyProfileController {
     @Autowired
     private FacultyProfileService facultyProfileService;
 
-    @GetMapping("/getallfaculties")
-    public List<Map<String, Object>> getAllFaculties() {
-        return facultyProfileService.getAllFaculties();
-    }
 }

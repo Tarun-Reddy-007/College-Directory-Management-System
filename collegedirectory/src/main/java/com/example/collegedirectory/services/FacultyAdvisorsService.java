@@ -24,14 +24,12 @@ public class FacultyAdvisorsService {
         Optional<User> studentOpt = userRepository.findById(studentId);
         Optional<User> facultyOpt = userRepository.findById(facultyId);
 
-        // Check if both the student and faculty exist
         if (studentOpt.isPresent() && facultyOpt.isPresent()) {
             User student = studentOpt.get();
             User faculty = facultyOpt.get();
 
-            // Check if the student already has a faculty advisor
             if (facultyAdvisorsRepository.findByStudent(student) != null) {
-                return false; // Student already has a faculty advisor
+                return false; 
             }
 
             FacultyAdvisors facultyAdvisors = new FacultyAdvisors();
@@ -39,9 +37,9 @@ public class FacultyAdvisorsService {
             facultyAdvisors.setFaculty(faculty);
 
             facultyAdvisorsRepository.save(facultyAdvisors);
-            return true; // Successfully added the faculty advisor
+            return true; 
         }
-        return false; // Either student or faculty not found
+        return false; 
     }
 
     public boolean deleteFacultyAdvisor(Long studentId) {
@@ -51,21 +49,21 @@ public class FacultyAdvisorsService {
             FacultyAdvisors facultyAdvisor = facultyAdvisorsRepository.findByStudent(student);
             if (facultyAdvisor != null) {
                 facultyAdvisorsRepository.delete(facultyAdvisor);
-                return true; // Successfully deleted
+                return true; 
             }
         }
-        return false; // No faculty advisor found for the student
+        return false; 
     }
 
     public Map<String, Object> getFacultyAdvisorDetails(Long studentId) {
         User student = userRepository.findById(studentId).orElse(null);
         if (student == null) {
-            return null; // Handle case when student is not found
+            return null; 
         }
 
         FacultyAdvisors facultyAdvisor = facultyAdvisorsRepository.findByStudent(student);
         if (facultyAdvisor == null) {
-            return null; // Handle case when no faculty advisor is found
+            return null; 
         }
 
         User faculty = facultyAdvisor.getFaculty();
@@ -82,7 +80,7 @@ public class FacultyAdvisorsService {
         facultyDetails.put("officeHours", officeHours);
         facultyDetails.put("departmentName", departmentName);
 
-        return facultyDetails; // Return faculty details as a map
+        return facultyDetails; 
     }
 
 }

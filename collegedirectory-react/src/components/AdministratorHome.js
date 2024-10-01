@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; 
-import './AdministratorHome.css'; // Importing CSS for styling
+import './AdministratorHome.css'; 
 import Profile from './Profile';
 import ManageStudents from './ManageStudents';
 import ManageFaculties from './ManageFaculties';
@@ -9,8 +9,8 @@ import ManageCourses from './ManageCourses';
 import Graphs from './Graphs';
 
 const AdministratorHome = () => {
-    const [selectedMenu, setSelectedMenu] = useState('Profile'); // Default menu item
-    const navigate = useNavigate(); // Initialize navigate
+    const [selectedMenu, setSelectedMenu] = useState('Profile'); 
+    const navigate = useNavigate(); 
 
     const renderComponent = () => {
         switch (selectedMenu) {
@@ -32,8 +32,8 @@ const AdministratorHome = () => {
     };
 
     const handleLogout = () => {
-        localStorage.removeItem('userId'); // Clear user ID on logout
-        navigate('/'); // Redirect to the login page
+        localStorage.removeItem('userId'); 
+        navigate('/'); 
     };
 
     return (
@@ -47,7 +47,7 @@ const AdministratorHome = () => {
                     <li onClick={() => setSelectedMenu('Manage Faculties')}>Manage Faculties</li>
                     <li onClick={() => setSelectedMenu('Graphs')}>Graphs</li>
                 </ul>
-                <button onClick={handleLogout}>Logout</button> {/* Add logout button */}
+                <button onClick={handleLogout}>Logout</button>
             </div>
             <div className="admin-right-pane">
                 <h1>College Directory Management System</h1>

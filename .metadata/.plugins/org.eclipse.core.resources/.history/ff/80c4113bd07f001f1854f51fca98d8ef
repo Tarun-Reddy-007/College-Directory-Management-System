@@ -1,0 +1,28 @@
+package com.example.collegedirectory.services;
+
+import com.example.collegedirectory.entities.FacultyProfile;
+import com.example.collegedirectory.entities.Role;
+import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.FacultyProfileRepository;
+import com.example.collegedirectory.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+@Service
+public class FacultyProfileService {
+
+    @Autowired
+    private UserRepository userRepository;
+    
+    @Autowired
+    private FacultyProfileRepository facultyProfileRepository;
+
+    public List<Object[]> getAllFaculties() {
+        return userRepository.fetchAllFaculties();
+    }
+}

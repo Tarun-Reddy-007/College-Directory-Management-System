@@ -1,8 +1,10 @@
 package com.example.collegedirectory.controllers;
 
+import com.example.collegedirectory.repositories.FacultyAdvisorsRepository;
 import com.example.collegedirectory.repositories.StudentProfileRepository;
 import com.example.collegedirectory.services.GraphService;
 import com.example.collegedirectory.services.StudentProfileService;
+import com.example.collegedirectory.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +24,8 @@ public class GraphController {
     private final GraphService graphService;
     private final StudentProfileRepository studentProfileRepository;
     private final StudentProfileService studentProfileService;
+    @Autowired
+    private FacultyAdvisorsRepository facultyAdvisorsRepository;
 
     @Autowired
     public GraphController(GraphService graphService, 
@@ -32,7 +36,6 @@ public class GraphController {
         this.studentProfileService = studentProfileService;
     }
 
-    // Endpoint to get enrollment trends
     @GetMapping("/enrollment-trends")
     public Map<String, Integer> getEnrollmentTrends() {
         return graphService.getEnrollmentTrends();
@@ -63,14 +66,26 @@ public class GraphController {
             Map<String, Long> studentCount = studentProfileService.getStudentCountByYear();
             return ResponseEntity.ok(studentCount);
         } catch (Exception e) {
-            // Log the error
             e.printStackTrace();
-
-            // Return an error response
             Map<String, Long> errorResponse = new HashMap<>();
-            errorResponse.put("error", -1L); // Sentinel value for error
-
+            errorResponse.put("error", -1L); 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
+        
     }
+    @GetMapping("/faculty-advisor-workload")
+    public List<Map<String, Object>> getFacultyAdvisorWorkload() {
+        List<Map<String, Object>> workload = facultyAdvisorsRepository.findFacultyAdvisorWorkload();
+
+        return workload;
+    }
+    @Autowired
+    private UserService userService;
+    
+    @GetMapping("/students-to-faculty")
+    public double getStudentFacultyRatio() {
+        return graphService.getStudentFacultyRatio();
+    }
+    
 }
+

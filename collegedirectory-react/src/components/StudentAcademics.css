@@ -1,98 +1,86 @@
-/* Main container styling */
 .student-academics-container {
-    padding: 20px; /* Inner spacing */
-    max-width: 1200px; /* Maximum width */
-    margin: auto; /* Center alignment */
-    background-color: #f7f9fc; /* Light background for contrast */
-    border-radius: 10px; /* Rounded corners */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    padding: 20px;
+    max-width: 1200px;
+    margin: auto;
+    background-color: #f7f9fc;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Title styling */
 .student-academics-title {
-    font-size: 28px; /* Title font size */
-    color: #333; /* Dark text color */
-    margin-bottom: 15px; /* Space below title */
-    text-align: left; /* Align left for spacious feel */
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: left;
 }
 
-/* Detail text styling */
 .student-academic-detail {
-    font-size: 18px; /* Font size for details */
-    margin: 10px 0; /* Vertical margin */
-    color: #555; /* Medium grey text */
+    font-size: 18px;
+    margin: 10px 0;
+    color: #555;
 }
 
-/* Faculty advisor section title */
 .faculty-advisor-title {
-    font-size: 24px; /* Title font size */
-    margin-top: 20px; /* Space above section */
-    color: #333; /* Dark text color */
-    border-bottom: 2px solid #007bff; /* Bottom border */
-    padding-bottom: 5px; /* Padding below title */
+    font-size: 24px;
+    margin-top: 20px;
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
 }
 
-/* Faculty advisor info card */
 .faculty-advisor-card {
-    background-color: #ffffff; /* White background for the card */
-    border-radius: 8px; /* Rounded corners */
-    padding: 15px; /* Inner spacing */
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-    margin: 10px 0; /* Margin around the card */
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    margin: 10px 0;
 }
 
-/* Faculty advisor text styling */
 .faculty-advisor-card p {
-    margin: 5px 0; /* Space between paragraphs */
+    margin: 5px 0;
 }
 
-/* Enrolled courses section title */
 .enrolled-courses-title {
-    font-size: 24px; /* Title font size */
-    margin-top: 30px; /* Space above section */
-    color: #333; /* Dark text color */
-    border-bottom: 2px solid #007bff; /* Bottom border */
-    padding-bottom: 5px; /* Padding below title */
+    font-size: 24px;
+    margin-top: 30px;
+    color: #333;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
 }
 
-/* Enrolled courses list styling */
 .enrolled-courses-list {
-    list-style-type: none; /* Remove bullet points */
-    padding: 0; /* Remove padding */
+    list-style-type: none;
+    padding: 0;
 }
 
-/* Each course item styling */
 .enrolled-course-item {
-    padding: 10px; /* Inner spacing */
-    border-bottom: 1px solid #ddd; /* Divider line between items */
-    color: #333; /* Dark text color */
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    color: #333;
 }
 
-/* Last item in list without bottom border */
 .enrolled-course-item:last-child {
-    border-bottom: none; /* Remove border for last item */
+    border-bottom: none;
 }
 
-/* Message when no courses are found */
 .no-courses-message {
-    font-style: italic; /* Italic style */
-    color: #777; /* Light grey color */
-    text-align: center; /* Center alignment */
+    font-style: italic;
+    color: #777;
+    text-align: center;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .student-academics-container {
-        padding: 15px; /* Adjust inner spacing for smaller screens */
+        padding: 15px;
     }
 
     .student-academics-title {
-        font-size: 24px; /* Adjust font size for smaller screens */
+        font-size: 24px;
     }
 
     .student-academic-detail,
     .faculty-advisor-title,
     .enrolled-courses-title {
-        font-size: 18px; /* Adjust font size for smaller screens */
+        font-size: 18px;
     }
 }

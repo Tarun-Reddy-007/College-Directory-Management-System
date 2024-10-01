@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './FacultyProfile.css'; // Import the new CSS file
+import './FacultyProfile.css'; 
 
 const FacultyProfile = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const userId = localStorage.getItem('userId'); // Get userId from localStorage
+    const userId = localStorage.getItem('userId'); 
 
     useEffect(() => {
         const fetchUserDetails = async () => {
             try {
                 const response = await axios.get(`http://localhost:8081/api/users/getid/${userId}`);
+                console.log(response.data);
                 setUser(response.data);
             } catch (error) {
                 console.error('Error fetching user details:', error);

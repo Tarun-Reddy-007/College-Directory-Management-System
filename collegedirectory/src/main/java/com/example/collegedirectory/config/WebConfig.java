@@ -9,11 +9,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**") // Allow all API endpoints
-                .allowedOrigins("http://localhost:3000") // Allow your frontend URL
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow specific HTTP methods
-                .allowedHeaders("*") // Allow all headers
-                .allowCredentials(true) // Allow credentials (if needed)
-                .maxAge(3600); // Cache preflight response for 1 hour
+        registry.addMapping("/api/**") 
+                .allowedOrigins("http://localhost:3000") 
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*") 
+                .allowCredentials(true) 
+                .maxAge(3600);
     }
 }

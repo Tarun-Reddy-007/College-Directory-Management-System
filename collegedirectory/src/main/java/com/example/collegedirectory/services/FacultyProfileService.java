@@ -1,7 +1,9 @@
 package com.example.collegedirectory.services;
 
+import com.example.collegedirectory.entities.FacultyProfile;
 import com.example.collegedirectory.entities.Role;
 import com.example.collegedirectory.entities.User;
+import com.example.collegedirectory.repositories.FacultyProfileRepository;
 import com.example.collegedirectory.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,21 +18,8 @@ public class FacultyProfileService {
 
     @Autowired
     private UserRepository userRepository;
-
-    public List<Map<String, Object>> getAllFaculties() {
-        List<User> faculties = userRepository.findAllByRole(Role.FACULTY_MEMBER); // Assuming 'FACULTY' is the role for faculty members
-        List<Map<String, Object>> facultyList = new ArrayList<>();
-
-        for (User faculty : faculties) {
-            Map<String, Object> facultyData = new HashMap<>();
-            facultyData.put("facultyId", faculty.getId());
-            facultyData.put("facultyName", faculty.getName());
-            facultyData.put("phone", faculty.getPhone());
-            facultyData.put("email", faculty.getEmail());
-            facultyData.put("departmentName", faculty.getDepartment()); // Fetch the department name
-            facultyList.add(facultyData);
-        }
-
-        return facultyList;
-    }
+    
+    @Autowired
+    private FacultyProfileRepository facultyProfileRepository;
+    
 }

@@ -1,0 +1,67 @@
+package com.example.collegedirectory.entities;
+
+import jakarta.persistence.*;
+import java.util.Set;
+
+@Entity
+@Table(name = "departments")
+public class Department {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false) // Make this field non-nullable if necessary
+    private String description; // Add the description field
+
+    // Bi-directional relationships with StudentProfile and FacultyProfile
+    @OneToMany(mappedBy = "department")
+    private Set<StudentProfile> studentProfiles;
+
+    @OneToMany(mappedBy = "department")
+    private Set<FacultyProfile> facultyProfiles;
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() { // Add this method
+        return description;
+    }
+
+    public void setDescription(String description) { // Add this method
+        this.description = description;
+    }
+
+    public Set<StudentProfile> getStudentProfiles() {
+        return studentProfiles;
+    }
+
+    public void setStudentProfiles(Set<StudentProfile> studentProfiles) {
+        this.studentProfiles = studentProfiles;
+    }
+
+    public Set<FacultyProfile> getFacultyProfiles() {
+        return facultyProfiles;
+    }
+
+    public void setFacultyProfiles(Set<FacultyProfile> facultyProfiles) {
+        this.facultyProfiles = facultyProfiles;
+    }
+}

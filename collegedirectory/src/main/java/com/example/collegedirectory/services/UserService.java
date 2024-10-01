@@ -2,10 +2,15 @@ package com.example.collegedirectory.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import com.example.collegedirectory.entities.Department; // Ensure this import exists
+import java.util.Map;
+
+import com.example.collegedirectory.entities.Department; 
 import com.example.collegedirectory.entities.FacultyProfile;
-import com.example.collegedirectory.entities.StudentProfile; // Ensure this import exists
+import com.example.collegedirectory.entities.StudentProfile; 
 import com.example.collegedirectory.entities.Role;
 import com.example.collegedirectory.entities.User;
 import com.example.collegedirectory.repositories.UserRepository;
@@ -19,29 +24,26 @@ public class UserService {
     private UserRepository userRepository;
     
     @Autowired
-    private DepartmentRepository departmentRepository; // Add this line
+    private DepartmentRepository departmentRepository; 
 
     @Autowired
-    private StudentProfileRepository studentProfileRepository; // Add this line
+    private StudentProfileRepository studentProfileRepository; 
     
     @Autowired
-    private FacultyProfileRepository facultyProfileRepository; // Add this line
+    private FacultyProfileRepository facultyProfileRepository; 
 
-    // Updated method to return User object instead of boolean
     public User authenticate(String username, String password, String role) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
             try {
-                // Convert the provided role string to Role enum and check for equality
-                Role providedRole = Role.valueOf(role.trim().toUpperCase()); // Convert to upper case for matching
+                Role providedRole = Role.valueOf(role.trim().toUpperCase()); 
                 if (user.getPassword().equals(password) && user.getRole() == providedRole) {
-                    return user; // Return user object if authentication is successful
+                    return user; 
                 }
             } catch (IllegalArgumentException e) {
-                // Handle invalid role here if necessary (e.g., log it)
             }
         }
-        return null; // Return null if user not found or credentials do not match
+        return null;
     }
 
     public User findByUsername(String username) {
@@ -57,10 +59,9 @@ public class UserService {
     }
     
     public User addStudent(User user, String departmentName, String year) {
-        user.setRole(Role.STUDENT); // Set the role to STUDENT
-        User savedUser = userRepository.save(user); // Save the user first
+        user.setRole(Role.STUDENT);
+        User savedUser = userRepository.save(user); 
 
-        // Now retrieve the department ID using the department name
         Department department = departmentRepository.findByName(departmentName);
         System.out.println("Department found: " + department);
 
@@ -68,16 +69,14 @@ public class UserService {
             throw new IllegalArgumentException("Department not found");
         }
 
-        // Create a new StudentProfile
         StudentProfile studentProfile = new StudentProfile();
-        studentProfile.setUser(savedUser); // Set the saved user
-        studentProfile.setDepartment(department); // Set the department
-        studentProfile.setYear(year); // Set the year
+        studentProfile.setUser(savedUser); 
+        studentProfile.setDepartment(department); 
+        studentProfile.setYear(year); 
 
-        // Save the StudentProfile
         studentProfileRepository.save(studentProfile);
 
-        return savedUser; // Return the saved user
+        return savedUser; 
     }
 
     
@@ -92,23 +91,17 @@ public class UserService {
         if (department == null) {
             throw new IllegalArgumentException("Department not found");
         }
-
-        // Create a new FacultyProfile
         FacultyProfile facultyProfile = new FacultyProfile();
-        facultyProfile.setUser(savedUser); // Set the saved user
-        facultyProfile.setDepartment(department); // Set the department
-        facultyProfile.setOfficeHours(officeHours); // Set the office hours
+        facultyProfile.setUser(savedUser); 
+        facultyProfile.setDepartment(department); 
+        facultyProfile.setOfficeHours(officeHours); 
 
-        // Save the FacultyProfile
         facultyProfileRepository.save(facultyProfile);
 
-        return savedUser; // Return the saved user
+        return savedUser;
     }
 
-    
- // Add this method to UserService
     public List<User> findAllStudents() {
-        // Fetch users with the STUDENT role, and the StudentProfile (with department and year) will be loaded
         return userRepository.findAllByRole(Role.STUDENT);
     }
 
@@ -120,77 +113,89 @@ public class UserService {
     public User updateStudent(Long id, User updatedUser, String departmentName, Object yearObj) {
         User existingUser = userRepository.findById(id).orElse(null);
         if (existingUser != null) {
-            // Update the user fields
             existingUser.setName(updatedUser.getName());
             existingUser.setUsername(updatedUser.getUsername());
             existingUser.setEmail(updatedUser.getEmail());
             existingUser.setPhone(updatedUser.getPhone());
             existingUser.setPassword(updatedUser.getPassword());
 
-            // Update the student profile
             StudentProfile studentProfile = studentProfileRepository.findByUser(existingUser);
             if (studentProfile != null) {
-                // Update department
                 Department department = departmentRepository.findByName(departmentName);
                 if (department != null) {
                     studentProfile.setDepartment(department);
                 }
 
-                // Handle the year field correctly
                 String year;
                 if (yearObj instanceof Integer) {
-                    year = String.valueOf(yearObj); // Convert to String
+                    year = String.valueOf(yearObj); 
                 } else if (yearObj instanceof String) {
-                    year = (String) yearObj; // Cast to String
+                    year = (String) yearObj; 
                 } else {
                     throw new IllegalArgumentException("Year must be a String or Integer");
                 }
-                studentProfile.setYear(year); // Update year
+                studentProfile.setYear(year); 
 
-                studentProfileRepository.save(studentProfile); // Save changes to the student profile
+                studentProfileRepository.save(studentProfile); 
             }
 
-            return userRepository.save(existingUser); // Save changes to the user
+            return userRepository.save(existingUser);
         }
-        return null; // User not found
+        return null; 
     }
 
     public User updateFaculty(Long id, User updatedUser, String departmentName, String officeHours) {
         User existingUser = userRepository.findById(id).orElse(null);
         if (existingUser != null) {
-            // Update the user fields
             existingUser.setName(updatedUser.getName());
             existingUser.setUsername(updatedUser.getUsername());
             existingUser.setEmail(updatedUser.getEmail());
             existingUser.setPhone(updatedUser.getPhone());
-            existingUser.setPassword(updatedUser.getPassword()); // Update password only if necessary
-
-            // Update the faculty profile
+            existingUser.setPassword(updatedUser.getPassword()); 
             FacultyProfile facultyProfile = facultyProfileRepository.findByUser(existingUser);
             if (facultyProfile != null) {
-                // Update department
                 Department department = departmentRepository.findByName(departmentName);
                 if (department != null) {
                     facultyProfile.setDepartment(department);
                 }
+                facultyProfile.setOfficeHours(officeHours); 
 
-                // Update office hours
-                facultyProfile.setOfficeHours(officeHours); // Update office hours
-
-                facultyProfileRepository.save(facultyProfile); // Save changes to the faculty profile
+                facultyProfileRepository.save(facultyProfile); 
             }
 
-            return userRepository.save(existingUser); // Save changes to the user
+            return userRepository.save(existingUser); 
         }
-        return null; // User not found
+        return null;
+    }
+    
+    public List<Map<String, Object>> getAllFacultyDetails() {
+        List<User> users = userRepository.findAll();
+        List<Map<String, Object>> facultyDetails = new ArrayList<>();
+
+        for (User user : users) {
+            if (user.getFacultyProfile() != null) { 
+                Map<String, Object> facultyData = new HashMap<>();
+                facultyData.put("id", user.getId());
+                facultyData.put("name", user.getName());
+                facultyData.put("username", user.getUsername());
+                facultyData.put("phone", user.getPhone());
+                facultyData.put("email", user.getEmail());
+                facultyData.put("officeHours", user.getOfficeHours());
+                facultyData.put("departmentName", user.getDepartment());
+
+                facultyDetails.add(facultyData);
+            }
+        }
+
+        return facultyDetails;
     }
 
 
     public boolean deleteUser(Long id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
-            return true; // Deletion successful
+            return true;
         }
-        return false; // User not found
+        return false; 
     }
 }

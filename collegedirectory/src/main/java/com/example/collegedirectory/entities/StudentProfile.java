@@ -3,11 +3,11 @@ package com.example.collegedirectory.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "studentprofile") // Use consistent casing
+@Table(name = "studentprofile") 
 public class StudentProfile {
     
     @Id
-    @Column(name = "user_id") // Specify the column name
+    @Column(name = "user_id") 
     private Long userId;
 
     @OneToOne
@@ -15,17 +15,16 @@ public class StudentProfile {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "photo") // Specify the column name
+    @Column(name = "photo") 
     private String photo;
 
     @ManyToOne
-    @JoinColumn(name = "department_id", nullable = false) // Specify the column name and make it non-nullable
+    @JoinColumn(name = "department_id", nullable = false) 
     private Department department;
 
-    @Column(name = "year") // Specify the column name
+    @Column(name = "year") 
     private String year;
 
-    // Getters and Setters
     public Long getUserId() {
         return userId;
     }

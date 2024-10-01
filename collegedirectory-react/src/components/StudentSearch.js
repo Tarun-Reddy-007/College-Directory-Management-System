@@ -1,19 +1,18 @@
-// src/components/StudentSearch.js
+
 import React, { useState, useEffect } from 'react';
-import './StudentSearch.css'; // Importing the CSS file
+import './StudentSearch.css'; 
 import axios from 'axios';
 
 const StudentSearch = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [suggestions, setSuggestions] = useState([]);
-    const [studentData, setStudentData] = useState([]); // Use state for student data
+    const [studentData, setStudentData] = useState([]); 
 
-    // Fetch student data on component mount
     useEffect(() => {
         const fetchStudentData = async () => {
             try {
-                const response = await axios.get('http://localhost:8081/api/users/getallstudents'); // Call your API function
-                setStudentData(response.data); // Set the fetched data to state
+                const response = await axios.get('http://localhost:8081/api/users/getallstudents'); 
+                setStudentData(response.data); 
             } catch (error) {
                 console.error('Error fetching student data:', error);
             }
