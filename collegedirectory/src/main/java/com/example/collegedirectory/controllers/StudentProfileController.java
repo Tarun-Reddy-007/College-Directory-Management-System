@@ -24,7 +24,6 @@ public class StudentProfileController {
     @GetMapping("/dept-year")
     public ResponseEntity<Map<String, Object>> getStudentAcademics(@RequestParam Long userId) {
         try {
-            // Fetch academic details using the service
             Map<String, Object> academicDetails = studentProfileService.getStudentAcademicDetails(userId);
             return ResponseEntity.ok(academicDetails);
         } catch (Exception e) {

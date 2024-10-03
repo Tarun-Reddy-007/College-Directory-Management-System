@@ -162,7 +162,8 @@ public class UserController {
     
     @PostMapping("/addfaculty")
     public ResponseEntity<User> addFaculty(@RequestBody Map<String, Object> request) {
-        try {
+    	System.out.println(request);        
+    	try {
             User newUser = new User();
             newUser.setUsername((String) request.get("username"));
             newUser.setPassword((String) request.get("password"));

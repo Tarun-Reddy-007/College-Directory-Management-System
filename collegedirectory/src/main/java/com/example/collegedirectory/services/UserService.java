@@ -81,25 +81,27 @@ public class UserService {
 
     
     public User addFaculty(User user, String departmentName, String officeHours) {
-        user.setRole(Role.FACULTY_MEMBER); // Set the role to FACULTY
-        User savedUser = userRepository.save(user); // Save the user first
+        user.setRole(Role.FACULTY_MEMBER); 
+        
+        User savedUser = userRepository.save(user);
 
-        // Retrieve the department using the department name
         Department department = departmentRepository.findByName(departmentName);
-        System.out.println("Department found: " + department);
-
         if (department == null) {
             throw new IllegalArgumentException("Department not found");
         }
+        
         FacultyProfile facultyProfile = new FacultyProfile();
-        facultyProfile.setUser(savedUser); 
-        facultyProfile.setDepartment(department); 
-        facultyProfile.setOfficeHours(officeHours); 
+        facultyProfile.setUser(savedUser);  
+        facultyProfile.setDepartment(department);
+        facultyProfile.setOfficeHours(officeHours);
 
         facultyProfileRepository.save(facultyProfile);
 
         return savedUser;
     }
+
+
+
 
     public List<User> findAllStudents() {
         return userRepository.findAllByRole(Role.STUDENT);

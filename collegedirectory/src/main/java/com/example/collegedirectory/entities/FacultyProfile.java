@@ -11,6 +11,7 @@ public class FacultyProfile {
     private Long userId;
 
     @OneToOne
+    @MapsId
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     @JsonManagedReference
     private User user;
@@ -21,7 +22,7 @@ public class FacultyProfile {
     @JoinColumn(name = "department_id")
     private Department department;
 
-    private String OfficeHours;
+    private String officeHours;
 
     public Long getUserId() {
         return userId;
@@ -56,10 +57,10 @@ public class FacultyProfile {
     }
 
     public String getOfficeHours() {
-        return OfficeHours;
+        return officeHours;
     }
 
     public void setOfficeHours(String officeHours) {
-        this.OfficeHours = officeHours;
+        this.officeHours = officeHours;
     }
 }

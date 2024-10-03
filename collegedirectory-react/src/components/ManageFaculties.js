@@ -43,7 +43,6 @@ const ManageFaculty = () => {
     const fetchFaculty = async () => {
         try {
             const response = await axios.get('http://localhost:8081/api/users/getallfaculties');
-            console.log(response.data);
             if (Array.isArray(response.data)) {
                 setFaculty(response.data);
             } else {
@@ -85,8 +84,10 @@ const ManageFaculty = () => {
     };
 
     const handleSubmit = async (e) => {
+        console.log(formData);
         e.preventDefault();
         try {
+            console.log(formData);
             await axios.post('http://localhost:8081/api/users/addfaculty', formData);
             handleClose();
             fetchFaculty();

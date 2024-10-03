@@ -18,8 +18,6 @@ public class FacultyAdvisors {
     @JoinColumn(name = "faculty_id", nullable = false)
     private User faculty;
 
-    // Getters and Setters
-
     public Long getId() {
         return id;
     }

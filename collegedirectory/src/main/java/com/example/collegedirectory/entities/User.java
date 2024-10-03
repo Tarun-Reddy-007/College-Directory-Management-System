@@ -25,7 +25,6 @@ public class User {
     private String email;
     private String phone;
 
-    // Getters and Setters
 
     public Long getId() {
         return id;
@@ -90,7 +89,6 @@ public class User {
         return facultyProfile;
     }
     
- // Getters and setters for transient fields
     public String getDepartment() {
         if (this.studentProfile != null && this.studentProfile.getDepartment() != null) {
             return this.studentProfile.getDepartment().getName();

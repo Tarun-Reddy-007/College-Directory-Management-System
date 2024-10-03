@@ -17,7 +17,6 @@ public class Enrollment {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
